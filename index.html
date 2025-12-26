@@ -1,109 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smoke Timer</title>
-  <link rel="manifest" href="manifest.json">
-  <style>
-    body {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #0f0f0f;
-      color: #ffffff;
-      font-family: system-ui, sans-serif;
-      text-align: center;
-    }
-    button {
-      font-size: 1.5rem;
-      padding: 20px 40px;
-      background-color: #1e90ff;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    button:disabled {
-      background-color: #555;
-      cursor: not-allowed;
-    }
-    #countdown {
-      margin-top: 15px;
-      font-size: 1.25rem;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smoke Timer</title>
+<link rel="manifest" href="manifest.json" />
+
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --accent: #4ade80;
+    --border: rgba(255,255,255,.15);
+    --text: #fff;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+
+  .card {
+    width: 92%;
+    max-width: 420px;
+    padding: 26px 26px 20px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.05);
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  }
+
+  h1 {
+    font-size: 1.1rem;
+    opacity: .9;
+    margin-bottom: 12px;
+  }
+
+  .circle-wrap {
+    width: 185px;
+    height: 185px;
+    margin: 10px auto 10px;
+    position: relative;
+  }
+
+  svg {
+    width: 185px;
+    height: 185px;
+    transform: rotate(-90deg);
+  }
+
+  .circle-bg {
+    stroke: rgba(255,255,255,.12);
+    stroke-width: 10;
+    fill: none;
+  }
+
+  .circle-progress {
+    stroke: var(--accent);
+    stroke-width: 10;
+    stroke-linecap: round;
+    fill: none;
+    transition: stroke-dashoffset .3s linear;
+  }
+
+  .timer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    letter-spacing: .5px;
+  }
+
+  .btn {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-size: 1.05rem;
+    background: var(--accent);
+    color: #000;
+    cursor: pointer;
+    transition: .18s;
+    margin-top: 10px;
+  }
+
+  .btn:disabled {
+    background: #4b5563;
+    color: #bbb;
+    cursor: not-allowed;
+  }
+
+  .options {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .opt {
+    padding: 6px 12px;
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,.2);
+    opacity: .75;
+    font-size: .8rem;
+  }
+
+  .opt.active {
+    background: rgba(255,255,255,.12);
+    opacity: 1;
+  }
+
+  .status {
+    margin-top: 10px;
+    font-size: .9rem;
+    opacity: .8;
+    min-height: 18px;
+  }
+
+  .warning {
+    color: #f87171;
+  }
+
+  .counter {
+    margin-top: 8px;
+    font-size: .9rem;
+    opacity: .9;
+  }
+</style>
 </head>
+
 <body>
-  <div>
-    <button id="startButton">Start 1-hour timer</button>
-    <div id="countdown">00:00</div>
+<div class="card">
+  <h1>One cigarette per cooldown</h1>
+
+  <div class="circle-wrap">
+    <svg>
+      <circle class="circle-bg" cx="92.5" cy="92.5" r="80"></circle>
+      <circle id="ring" class="circle-progress" cx="92.5" cy="92.5" r="80"></circle>
+    </svg>
+    <div id="timer" class="timer">00:00</div>
   </div>
 
-  <script>
-    var startButton = document.getElementById('startButton');
-    var countdown = document.getElementById('countdown');
-    var interval;
+  <button id="start" class="btn">Start timer</button>
 
-    function updateCountdown() {
-      var now = new Date().getTime();
-      var endTime = localStorage.getItem('endTime');
-      if (!endTime) return;
+  <div class="options">
+    <div class="opt active" data-min="60">60m</div>
+    <div class="opt" data-min="45">45m</div>
+    <div class="opt" data-min="90">90m</div>
+  </div>
 
-      endTime = parseInt(endTime, 10);
-      var timeLeft = endTime - now;
+  <div id="status" class="status"></div>
+  <div id="counter" class="counter"></div>
+</div>
 
-      if (timeLeft <= 0) {
-        clearInterval(interval);
-        localStorage.removeItem('endTime');
-        countdown.innerText = "00:00";
-        startButton.disabled = false;
-        if ("vibrate" in navigator) navigator.vibrate(200);
+<script>
+  var startBtn = document.getElementById("start");
+  var timerEl = document.getElementById("timer");
+  var statusEl = document.getElementById("status");
+  var ring = document.getElementById("ring");
+  var options = document.querySelectorAll(".opt");
+  var counterEl = document.getElementById("counter");
 
-        if (Notification.permission === "granted") {
-          new Notification("You can smoke now!");
-        } else if (Notification.permission === "default") {
-          Notification.requestPermission();
-        }
+  var interval;
+  var minutesSetting = 60;
+  var CIRC = 2 * Math.PI * 80;
+  ring.style.strokeDasharray = CIRC;
 
-        alert("You can smoke now!");
-      } else {
-        var minutes = Math.floor(timeLeft / 60000);
-        var seconds = Math.floor((timeLeft % 60000) / 1000);
-        countdown.innerText = (minutes < 10 ? '0' : '') + minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-      }
+  function loadDailyCount() {
+    var today = new Date().toDateString();
+    var saved = JSON.parse(localStorage.getItem("daily") || "{}");
+    var count = saved[today] || 0;
+    counterEl.innerText = "Today: " + count + " cigarette" + (count===1?"":"s");
+  }
+
+  function incrementDaily() {
+    var today = new Date().toDateString();
+    var saved = JSON.parse(localStorage.getItem("daily") || "{}");
+    saved[today] = (saved[today] || 0) + 1;
+    localStorage.setItem("daily", JSON.stringify(saved));
+  }
+
+  options.forEach(function(o){
+    o.onclick = function(){
+      options.forEach(function(x){ x.classList.remove("active"); });
+      o.classList.add("active");
+      minutesSetting = parseInt(o.getAttribute("data-min"),10);
+    };
+  });
+
+  function updateCountdown(){
+    var now = Date.now();
+    var end = parseInt(localStorage.getItem("endTime"),10);
+    var total = parseInt(localStorage.getItem("duration"),10);
+
+    if (!end) return;
+
+    var left = end - now;
+
+    if (left <= 0){
+      clearInterval(interval);
+      localStorage.removeItem("endTime");
+      localStorage.removeItem("duration");
+      timerEl.innerText = "00:00";
+      startBtn.disabled = false;
+      ring.style.strokeDashoffset = 0;
+      statusEl.innerText = "You're good — tap when you smoke again";
+
+      if ("vibrate" in navigator) navigator.vibrate(300);
+      if ("Notification" in window && Notification.permission === "granted")
+        new Notification("You can smoke now");
+
+      alert("You can smoke now!");
+      return;
     }
 
-    function startTimer() {
-      var endTime = new Date().getTime() + (60 * 60 * 1000); // 1 hour
-      localStorage.setItem('endTime', endTime);
-      startButton.disabled = true;
-      updateCountdown();
-      interval = setInterval(updateCountdown, 1000);
+    var m = Math.floor(left / 60000);
+    var s = Math.floor((left % 60000) / 1000);
+    timerEl.innerText = (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+
+    var progress = 1 - (left / total);
+    ring.style.strokeDashoffset = CIRC * progress;
+
+    statusEl.innerText = "Cooling down…";
+  }
+
+  function startTimer(){
+    var existing = localStorage.getItem("endTime");
+    if (existing){
+      statusEl.innerHTML = "<span class='warning'>Too early — timer is already running</span>";
+      return;
     }
 
-    startButton.addEventListener('click', startTimer);
+    var dur = minutesSetting * 60000;
+    var end = Date.now() + dur;
 
-    // Check if timer was ongoing
-    if (localStorage.getItem('endTime')) {
-      updateCountdown();
-      interval = setInterval(updateCountdown, 1000);
-      startButton.disabled = true;
-    }
+    localStorage.setItem("endTime", end);
+    localStorage.setItem("duration", dur);
 
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(function(error) {
-        console.error('Service Worker registration failed:', error);
-      });
-    }
+    startBtn.disabled = true;
 
-    // Ask for notification permission
-    if ('Notification' in window && Notification.permission === "default") {
-      Notification.requestPermission();
-    }
-  </script>
+    incrementDaily();
+    loadDailyCount();
+
+    updateCountdown();
+    interval = setInterval(updateCountdown, 1000);
+  }
+
+  startBtn.onclick = startTimer;
+
+  if (localStorage.getItem("endTime")){
+    startBtn.disabled = true;
+    updateCountdown();
+    interval = setInterval(updateCountdown, 1000);
+  }
+
+  loadDailyCount();
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
+  }
+
+  if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+</script>
 </body>
 </html>
