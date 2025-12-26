@@ -1,302 +1,968 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Smoke Timer</title>
-<link rel="manifest" href="manifest.json" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Smoke Timer</title>
 
-<style>
-  :root {
-    --bg: #0f0f0f;
-    --accent: #4ade80;
-    --border: rgba(255,255,255,.15);
-    --text: #fff;
-  }
+    <link rel="manifest" href="manifest.json" />
 
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: -apple-system, system-ui, sans-serif;
-  }
+    <!-- BOOTSTRAP ICONS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
 
-  .card {
-    width: 92%;
-    max-width: 420px;
-    padding: 26px 26px 20px;
-    border-radius: 18px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,.05);
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,.4);
-  }
+    <!-- iOS APP META -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Smoke Timer" />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f6ac.png"
+    />
 
-  h1 {
-    font-size: 1.1rem;
-    opacity: .9;
-    margin-bottom: 12px;
-  }
+    <style>
+      :root {
+        --bg: #0f0f0f;
+        --panel: #151515;
+        --accent: #4ade80;
+        --border: rgba(255, 255, 255, 0.14);
+        --text: #fff;
+      }
 
-  .circle-wrap {
-    width: 185px;
-    height: 185px;
-    margin: 10px auto 10px;
-    position: relative;
-  }
+      body.night {
+        --bg: #060606;
+        --panel: #0d0d0d;
+        --accent: #4ade80;
+        --border: rgba(255, 255, 255, 0.12);
+        --text: #f5f5f5;
+      }
 
-  svg {
-    width: 185px;
-    height: 185px;
-    transform: rotate(-90deg);
-  }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, system-ui;
+      }
 
-  .circle-bg {
-    stroke: rgba(255,255,255,.12);
-    stroke-width: 10;
-    fill: none;
-  }
+      .shell {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 10px 10px 18px;
+      }
 
-  .circle-progress {
-    stroke: var(--accent);
-    stroke-width: 10;
-    stroke-linecap: round;
-    fill: none;
-    transition: stroke-dashoffset .3s linear;
-  }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 16px 38px rgba(0, 0, 0, 0.35);
+        padding: 20px;
+      }
 
-  .timer {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.2rem;
-    letter-spacing: .5px;
-  }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 1.25rem;
+      }
 
-  .btn {
-    width: 100%;
-    border: none;
-    border-radius: 14px;
-    padding: 14px 18px;
-    font-size: 1.05rem;
-    cursor: pointer;
-    transition: .18s;
-    margin-top: 10px;
-  }
+      .sub {
+        opacity: 0.75;
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+      }
 
-  .btn:disabled {
-    background: #4b5563;
-    color: #bbb;
-    cursor: not-allowed;
-  }
+      .circle {
+        width: 190px;
+        height: 190px;
+        margin: 8px auto 6px;
+        position: relative;
+      }
 
-  .btn-primary {
-    background: var(--accent);
-    color: #000;
-  }
+      svg {
+        width: 190px;
+        height: 190px;
+        transform: rotate(-90deg);
+      }
 
-  .btn-reset {
-    background: #ef4444;
-    color: #fff;
-  }
+      .bg {
+        stroke: rgba(255, 255, 255, 0.16);
+        stroke-width: 10;
+        fill: none;
+      }
 
-  .options {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 8px;
-  }
+      .fg {
+        stroke: var(--accent);
+        stroke-width: 10;
+        stroke-linecap: round;
+        fill: none;
+        transition: stroke-dashoffset 0.6s ease;
+      }
 
-  .opt {
-    padding: 6px 12px;
-    border-radius: 30px;
-    border: 1px solid rgba(255,255,255,.2);
-    opacity: .75;
-    font-size: .8rem;
-  }
+      .timerText {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+      }
 
-  .opt.active {
-    background: rgba(255,255,255,.12);
-    opacity: 1;
-  }
+      .btn {
+        width: 100%;
+        padding: 14px;
+        margin-top: 8px;
+        border: none;
+        border-radius: 14px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
 
-  .status {
-    margin-top: 10px;
-    font-size: .9rem;
-    opacity: .8;
-    min-height: 18px;
-  }
+      .primary {
+        background: var(--accent);
+        color: #000;
+      }
 
-  .warning {
-    color: #f87171;
-  }
+      .secondary {
+        background: #38bdf8;
+        color: #000;
+      }
 
-  .counter {
-    margin-top: 8px;
-    font-size: .9rem;
-    opacity: .9;
-  }
-</style>
-</head>
+      .danger {
+        background: #ef4444;
+        color: #fff;
+      }
 
-<body>
-<div class="card">
-  <h1>One cigarette per cooldown</h1>
+      .info {
+        font-size: 0.85rem;
+        margin: 4px 0 8px;
+        min-height: 18px;
+      }
 
-  <div class="circle-wrap">
-    <svg>
-      <circle class="circle-bg" cx="92.5" cy="92.5" r="80"></circle>
-      <circle id="ring" class="circle-progress" cx="92.5" cy="92.5" r="80"></circle>
-    </svg>
-    <div id="timer" class="timer">00:00</div>
-  </div>
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 30px;
+        font-size: 0.75rem;
+        margin-top: 4px;
+      }
 
-  <button id="start" class="btn btn-primary">Start timer</button>
+      .badge.good {
+        background: #064e3b;
+        color: #4ade80;
+      }
 
-  <!-- ✅ NEW: reset button -->
-  <button id="reset" class="btn btn-reset">Reset timer</button>
+      .badge.warn {
+        background: #45240e;
+        color: #fbbf24;
+      }
 
-  <div class="options">
-    <div class="opt active" data-min="60">60m</div>
-    <div class="opt" data-min="45">45m</div>
-    <div class="opt" data-min="90">90m</div>
-  </div>
+      .badge.danger {
+        background: #3b0b0b;
+        color: #f87171;
+      }
 
-  <div id="status" class="status"></div>
-  <div id="counter" class="counter"></div>
-</div>
+      .pills {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
 
-<script>
-  var startBtn = document.getElementById("start");
-  var resetBtn = document.getElementById("reset");
-  var timerEl = document.getElementById("timer");
-  var statusEl = document.getElementById("status");
-  var ring = document.getElementById("ring");
-  var options = document.querySelectorAll(".opt");
-  var counterEl = document.getElementById("counter");
+      .pill {
+        padding: 6px 10px;
+        border-radius: 30px;
+        border: 1px solid var(--border);
+        font-size: 0.8rem;
+        opacity: 0.75;
+        cursor: pointer;
+      }
 
-  var interval;
-  var minutesSetting = 60;
-  var CIRC = 2 * Math.PI * 80;
-  ring.style.strokeDasharray = CIRC;
+      .pill.active {
+        background: rgba(255, 255, 255, 0.12);
+        opacity: 1;
+      }
 
-  function loadDailyCount() {
-    var today = new Date().toDateString();
-    var saved = JSON.parse(localStorage.getItem("daily") || "{}");
-    var count = saved[today] || 0;
-    counterEl.innerText = "Today: " + count + " cigarette" + (count===1?"":"s");
-  }
+      .sectionTitle {
+        margin: 14px 0 4px;
+        font-size: 0.95rem;
+        opacity: 0.95;
+      }
 
-  function incrementDaily() {
-    var today = new Date().toDateString();
-    var saved = JSON.parse(localStorage.getItem("daily") || "{}");
-    saved[today] = (saved[today] || 0) + 1;
-    localStorage.setItem("daily", JSON.stringify(saved));
-  }
+      .metricBox {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 10px;
+        margin-top: 6px;
+        background: #101010;
+      }
 
-  options.forEach(function(o){
-    o.onclick = function(){
-      options.forEach(function(x){ x.classList.remove("active"); });
-      o.classList.add("active");
-      minutesSetting = parseInt(o.getAttribute("data-min"),10);
-    };
-  });
+      .metric {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        margin: 4px 0;
+      }
 
-  function updateCountdown(){
-    var now = Date.now();
-    var end = parseInt(localStorage.getItem("endTime"),10);
-    var total = parseInt(localStorage.getItem("duration"),10);
+      .barWrap {
+        margin-top: 6px;
+        height: 10px;
+        border-radius: 10px;
+        background: #232323;
+      }
 
-    if (!end) return;
+      .bar {
+        height: 100%;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #4ade80, #22c55e);
+        width: 0%;
+        transition: 0.35s;
+      }
 
-    var left = end - now;
+      .funCard {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 7px;
+        padding: 8px 10px;
+        background: #0e0e0e;
+        border-radius: 12px;
+        border: 1px solid #1f1f1f;
+      }
 
-    if (left <= 0){
-      clearInterval(interval);
-      localStorage.removeItem("endTime");
-      localStorage.removeItem("duration");
-      timerEl.innerText = "00:00";
-      startBtn.disabled = false;
-      ring.style.strokeDashoffset = 0;
-      statusEl.innerText = "You're good — tap when you smoke again";
+      .funCard span {
+        font-size: 0.8rem;
+        opacity: 0.85;
+      }
 
-      if ("vibrate" in navigator) navigator.vibrate(300);
-      if ("Notification" in window && Notification.permission === "granted")
-        new Notification("You can smoke now");
+      .canvasWrap {
+        margin-top: 10px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 10px;
+      }
 
-      alert("You can smoke now!");
-      return;
-    }
+      canvas {
+        width: 100%;
+        height: 130px;
+      }
 
-    var m = Math.floor(left / 60000);
-    var s = Math.floor((left % 60000) / 1000);
-    timerEl.innerText = (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 8px 0;
+        font-size: 0.85rem;
+      }
 
-    var progress = 1 - (left / total);
-    ring.style.strokeDashoffset = CIRC * progress;
+      input[type="number"] {
+        background: #0d0d0d;
+        border: 1px solid #333;
+        color: #fff;
+        padding: 6px 8px;
+        border-radius: 8px;
+        width: 90px;
+      }
 
-    statusEl.innerText = "Cooling down…";
-  }
+      .toggle {
+        appearance: none;
+        width: 36px;
+        height: 20px;
+        border-radius: 20px;
+        background: #555;
+        cursor: pointer;
+        position: relative;
+      }
 
-  function startTimer(){
-    var existing = localStorage.getItem("endTime");
-    if (existing){
-      statusEl.innerHTML = "<span class='warning'>Too early — timer is already running</span>";
-      return;
-    }
+      .toggle:checked {
+        background: #4ade80;
+      }
 
-    var dur = minutesSetting * 60000;
-    var end = Date.now() + dur;
+      .toggle:before {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        transition: 0.2s;
+      }
 
-    localStorage.setItem("endTime", end);
-    localStorage.setItem("duration", dur);
+      .toggle:checked:before {
+        transform: translateX(16px);
+      }
 
-    startBtn.disabled = true;
+      .toast {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%) translateY(200%);
+        background: #22c55e;
+        color: #000;
+        padding: 10px 14px;
+        border-radius: 14px;
+        font-size: 0.9rem;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+        transition: 0.32s;
+      }
 
-    incrementDaily();
-    loadDailyCount();
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
 
-    updateCountdown();
-    interval = setInterval(updateCountdown, 1000);
-  }
+  <body>
+    <div style="text-align: center; padding: 16px 10px">
+      <div style="font-size: 1.6rem; font-weight: 700; opacity: 0.95">
+        Smoke Less, Live More
+      </div>
+      <div style="opacity: 0.7; margin-top: 4px; font-size: 0.9rem">
+        “One hour at a time. Small wins add up.”
+      </div>
+    </div>
 
-  // ✅ Reset logic (only cancels the running timer)
-  function resetTimer() {
-    clearInterval(interval);
-    localStorage.removeItem("endTime");
-    localStorage.removeItem("duration");
+    <div class="shell">
+      <div class="card">
+        <h1>Smoke Timer</h1>
+        <div class="sub">One cigarette per cooldown</div>
 
-    timerEl.innerText = "00:00";
-    ring.style.strokeDashoffset = 0;
-    statusEl.innerText = "Timer reset";
+        <div id="since" class="info"></div>
 
-    startBtn.disabled = false;
-  }
+        <div class="circle">
+          <svg>
+            <circle class="bg" cx="95" cy="95" r="80"></circle>
+            <circle id="ring" class="fg" cx="95" cy="95" r="80"></circle>
+          </svg>
+          <div id="time" class="timerText">00:00</div>
+        </div>
 
-  startBtn.onclick = startTimer;
-  resetBtn.onclick = resetTimer;
+        <button id="start" class="btn primary">Start</button>
+        <button id="pause" class="btn secondary" style="display: none">
+          Pause
+        </button>
+        <button id="reset" class="btn danger">Reset</button>
 
-  if (localStorage.getItem("endTime")){
-    startBtn.disabled = true;
-    updateCountdown();
-    interval = setInterval(updateCountdown, 1000);
-  }
+        <div id="presets" class="pills"></div>
+        <div id="status" class="info"></div>
 
-  loadDailyCount();
+        <div class="sectionTitle">Today</div>
+        <div class="metricBox">
+          <div class="metric">
+            <span>Cigarettes</span><span id="today"></span>
+          </div>
 
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js");
-  }
+          <div class="barWrap">
+            <div id="limitBar" class="bar"></div>
+          </div>
+          <div id="limitBadge" class="badge good">Under limit</div>
 
-  if ("Notification" in window && Notification.permission === "default") {
-    Notification.requestPermission();
-  }
-</script>
-</body>
+          <div class="funCard">🚬 <span id="moneyToday"></span></div>
+          <div class="funCard">❤️ <span id="lifeToday"></span></div>
+          <div class="funCard">👟 <span id="stepsToday"></span></div>
+        </div>
+
+        <div class="sectionTitle">Progress</div>
+        <div class="metricBox">
+          <div class="metric"><span>Streak</span><span id="streak"></span></div>
+
+          <div class="canvasWrap">
+            <canvas id="chart"></canvas>
+            <div class="sub">Last 7 days</div>
+          </div>
+
+          <div class="sub" id="recent"></div>
+        </div>
+
+        <!-- ACHIEVEMENTS -->
+        <div class="sectionTitle">Achievements</div>
+        <div class="metricBox" id="achievements"></div>
+
+        <div class="sectionTitle">Settings</div>
+        <div class="metricBox">
+          <div class="row">
+            <span>Daily limit</span><input id="limit" type="number" min="1" />
+          </div>
+          <div class="row">
+            <span>Silent mode</span
+            ><input id="silent" type="checkbox" class="toggle" />
+          </div>
+          <div class="row">
+            <span>Price per pack</span
+            ><input id="price" type="number" min="1" />
+          </div>
+          <div class="row">
+            <span>Cigs per pack</span
+            ><input id="perpack" type="number" min="1" />
+          </div>
+          <div class="row">
+            <span>Add preset (min)</span
+            ><input id="addPreset" type="number" min="1" />
+          </div>
+          <div class="row">
+            <span>Backup data</span
+            ><input id="file" type="file" accept="application/json" />
+          </div>
+
+          <button id="export" class="btn secondary">Export</button>
+          <button id="undo" class="btn">Undo last log</button>
+
+          <button id="clearToday" class="btn danger">
+            <i class="bi bi-trash"></i> Clear today
+          </button>
+
+          <button id="clearAll" class="btn danger">
+            <i class="bi bi-trash"></i> Clear ALL history
+          </button>
+        </div>
+
+        <div class="sub" style="margin-top: 6px">
+          Not medical advice — just fun estimates. Skipping one is a win 🎯
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <audio id="ding">
+      <source src="data:audio/mp3;base64,//uQxA..." type="audio/mp3" />
+    </audio>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const jget = (k, d) =>
+        JSON.parse(localStorage.getItem(k) || JSON.stringify(d));
+      const jset = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+      const ring = $("ring"),
+        time = $("time"),
+        status = $("status"),
+        since = $("since");
+      const start = $("start"),
+        pause = $("pause"),
+        reset = $("reset"),
+        presets = $("presets");
+      const today = $("today"),
+        streak = $("streak"),
+        chart = $("chart"),
+        recent = $("recent");
+      const moneyToday = $("moneyToday"),
+        lifeToday = $("lifeToday"),
+        stepsToday = $("stepsToday");
+      const limit = $("limit"),
+        silent = $("silent"),
+        price = $("price"),
+        perpack = $("perpack");
+      const addPreset = $("addPreset"),
+        file = $("file"),
+        exportBtn = $("export"),
+        toast = $("toast"),
+        ding = $("ding");
+      const limitBar = $("limitBar"),
+        limitBadge = $("limitBadge");
+      const undo = $("undo"),
+        clearToday = $("clearToday"),
+        clearAll = $("clearAll");
+      const achievementsBox = $("achievements");
+
+      let minutes = 60,
+        interval,
+        paused = false,
+        left = 0;
+
+      const CIRC = 2 * Math.PI * 80;
+      ring.style.strokeDasharray = CIRC;
+
+      const daily = () => jget("daily", {});
+      const history = () => jget("history", []);
+
+      function show(m) {
+        toast.textContent = m;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2200);
+      }
+
+      function applyNightMode() {
+        const h = new Date().getHours();
+        if (h >= 19 || h < 6) document.body.classList.add("night");
+        else document.body.classList.remove("night");
+      }
+
+      applyNightMode();
+
+      function buildAchievements() {
+        const s = streakDays();
+        let html = "";
+
+        const list = [
+          { d: 3, label: "⭐ 3-day streak" },
+          { d: 7, label: "🥈 7-day streak" },
+          { d: 14, label: "🥇 14-day streak" },
+          { d: 30, label: "🔥 30-day streak" },
+        ];
+
+        list.forEach((b) => {
+          html += `<div class="funCard" style="opacity:${s >= b.d ? 1 : 0.4}">${
+            b.label
+          }</div>`;
+        });
+
+        achievementsBox.innerHTML = html;
+      }
+
+      undo.onclick = () => {
+        let h = history(),
+          d = daily();
+        if (!h.length) return show("Nothing to undo");
+        const last = h.shift();
+        jset("history", h);
+        const dayKey = new Date(last).toDateString();
+        if (d[dayKey] && d[dayKey] > 0) {
+          d[dayKey]--;
+          if (d[dayKey] === 0) delete d[dayKey];
+          jset("daily", d);
+        }
+        show("Last entry removed");
+        updateCounts();
+        draw();
+      };
+
+      clearToday.onclick = async () => {
+        const ok = await niceConfirm("🗑️ Clear only TODAY'S records?");
+        if (!ok) return;
+        const d = daily();
+        const key = new Date().toDateString();
+        delete d[key];
+        jset("daily", d);
+        show("Today cleared");
+        updateCounts();
+        draw();
+      };
+
+      clearAll.onclick = async () => {
+        const ok = await niceConfirm("🗑️ Delete ALL history permanently?");
+        if (!ok) return;
+        localStorage.removeItem("daily");
+        localStorage.removeItem("history");
+        show("All history deleted");
+        updateCounts();
+        draw();
+      };
+
+      function logCig() {
+        const d = daily(),
+          k = new Date().toDateString();
+        d[k] = (d[k] || 0) + 1;
+        jset("daily", d);
+      }
+
+      function streakDays() {
+        const d = daily(),
+          lim = parseInt(limit.value || 8),
+          now = Date.now();
+        let s = 0;
+        for (let i = 0; i < 60; i++) {
+          const k = new Date(now - i * 864e5).toDateString();
+          if ((d[k] || 0) <= lim) s++;
+          else break;
+        }
+        return s;
+      }
+
+      function updateMoneyAndHealth() {
+        const d = daily(),
+          k = new Date().toDateString(),
+          n = d[k] || 0;
+        const perCig =
+          parseFloat(price.value || 200) / parseFloat(perpack.value || 20);
+        moneyToday.textContent = "₹" + (n * perCig).toFixed(0);
+        lifeToday.textContent = `~${n * 11} min`;
+        stepsToday.textContent = `~${(n * 700).toLocaleString()} steps`;
+        const lim = parseInt(limit.value || 8),
+          pct = Math.min(100, (n / lim) * 100);
+        limitBar.style.width = pct + "%";
+        if (n === 0) {
+          limitBadge.textContent = "Great start!";
+          limitBadge.className = "badge good";
+        } else if (n < lim) {
+          limitBadge.textContent = "Under limit";
+          limitBadge.className = "badge good";
+        } else if (n === lim) {
+          limitBadge.textContent = "Limit reached";
+          limitBadge.className = "badge warn";
+        } else {
+          limitBadge.textContent = "Over limit";
+          limitBadge.className = "badge danger";
+        }
+      }
+
+      function updateCounts() {
+        const d = daily(),
+          k = new Date().toDateString(),
+          n = d[k] || 0;
+        today.textContent = n + " cig";
+        sinceText();
+        streak.textContent = streakDays() + " days";
+        updateMoneyAndHealth();
+        buildAchievements();
+      }
+
+      function sinceText() {
+        const t = parseInt(localStorage.getItem("last") || 0);
+        if (!t) {
+          since.textContent = "";
+          return;
+        }
+        const diff = Date.now() - t,
+          m = Math.floor(diff / 60000),
+          s = Math.floor((diff % 60000) / 1000);
+        since.textContent = `Last: ${m}m ${s}s ago`;
+      }
+
+      setInterval(sinceText, 1000);
+
+      function pushHistory() {
+        const h = history();
+        h.unshift(Date.now());
+        jset("history", h);
+      }
+
+      function draw() {
+        const ctx = chart.getContext("2d");
+        ctx.clearRect(0, 0, chart.width, chart.height);
+        const d = daily(),
+          now = Date.now(),
+          bars = [];
+        for (let i = 6; i >= 0; i--) {
+          const k = new Date(now - i * 864e5).toDateString();
+          bars.push(d[k] || 0);
+        }
+        const max = Math.max(5, ...bars),
+          w = (chart.width - 20) / 7;
+        ctx.strokeStyle = "#333";
+        ctx.beginPath();
+        ctx.moveTo(10, 10);
+        ctx.lineTo(10, 120);
+        ctx.lineTo(chart.width - 10, 120);
+        ctx.stroke();
+        ctx.fillStyle = "#4ade80";
+        bars.forEach((v, i) => {
+          const h = (v / max) * 100;
+          ctx.fillRect(12 + i * w, 120 - h, w - 14, h);
+        });
+        recent.textContent =
+          "Recent: " +
+          history()
+            .slice(0, 4)
+            .map((t) => new Date(t).toLocaleTimeString())
+            .join(" · ");
+      }
+
+      function renderPresets() {
+        const arr = jget("presets", [60, 45, 90]);
+        presets.innerHTML = "";
+        arr.forEach((m) => {
+          const d = document.createElement("div");
+          d.className = "pill" + (m === minutes ? " active" : "");
+          d.textContent = m + "m";
+          d.onclick = () => {
+            minutes = m;
+            renderPresets();
+          };
+          presets.appendChild(d);
+        });
+      }
+
+      addPreset.onchange = () => {
+        const v = parseInt(addPreset.value || 0);
+        if (!v) return;
+        const p = jget("presets", [60, 45, 90]);
+        p.push(v);
+        jset("presets", p);
+        addPreset.value = "";
+        renderPresets();
+      };
+
+      function notify() {
+        if (!silent.checked) {
+          if ("vibrate" in navigator) navigator.vibrate(300);
+          try {
+            ding.play();
+          } catch {}
+        }
+        if ("Notification" in window && Notification.permission === "granted")
+          new Notification("Cooldown done", { body: "You can smoke now" });
+        show("Cooldown finished");
+      }
+
+      function tick(end, total) {
+        const rem = end - Date.now();
+        if (rem <= 0) {
+          clearInterval(interval);
+          localStorage.removeItem("until");
+          localStorage.removeItem("total");
+          ring.style.strokeDashoffset = 0;
+          time.textContent = "00:00";
+          start.style.display = "block";
+          pause.style.display = "none";
+          status.textContent = "Done";
+          paused = false;
+          notify();
+          return;
+        }
+
+        left = rem;
+
+        const m = Math.floor(rem / 60000),
+          s = Math.floor((rem % 60000) / 1000);
+
+        time.textContent =
+          (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+
+        ring.style.strokeDashoffset = CIRC * (1 - rem / total);
+        status.textContent = paused ? "Paused" : "Cooling…";
+      }
+
+      start.onclick = async () => {
+        const ok = await niceConfirm("Log a cigarette and start cooldown?");
+        if (!ok) return;
+
+        const lim = parseInt(limit.value || 8),
+          d = daily(),
+          k = new Date().toDateString();
+
+        if ((d[k] || 0) >= lim) show("Limit reached today");
+
+        const dur = minutes * 60000,
+          end = Date.now() + dur;
+
+        localStorage.setItem("until", end);
+        localStorage.setItem("last", Date.now());
+        localStorage.setItem("total", dur);
+
+        logCig();
+        pushHistory();
+        updateCounts();
+        draw();
+
+        start.style.display = "none";
+        pause.style.display = "block";
+
+        paused = false;
+        interval = setInterval(() => tick(end, dur), 1000);
+        tick(end, dur);
+      };
+
+      pause.onclick = () => {
+        if (!paused) {
+          paused = true;
+          clearInterval(interval);
+          localStorage.setItem("remain", left);
+          localStorage.removeItem("until");
+          pause.textContent = "Resume";
+        } else {
+          paused = false;
+          pause.textContent = "Pause";
+
+          const left = parseInt(localStorage.getItem("remain") || 0),
+            total = parseInt(localStorage.getItem("total")) || minutes * 60000,
+            end = Date.now() + left;
+
+          localStorage.removeItem("remain");
+          localStorage.setItem("until", end);
+
+          interval = setInterval(() => tick(end, total), 1000);
+          tick(end, total);
+        }
+      };
+
+      reset.onclick = () => {
+        clearInterval(interval);
+        localStorage.removeItem("until");
+        localStorage.removeItem("remain");
+        localStorage.removeItem("total");
+        ring.style.strokeDashoffset = 0;
+        time.textContent = "00:00";
+        start.style.display = "block";
+        pause.style.display = "none";
+        status.textContent = "";
+      };
+
+      silent.checked = localStorage.getItem("silent") === "true";
+      silent.onchange = () => localStorage.setItem("silent", silent.checked);
+
+      limit.value = localStorage.getItem("limit") || 8;
+      limit.onchange = () => {
+        localStorage.setItem("limit", limit.value);
+        updateCounts();
+      };
+
+      price.value = localStorage.getItem("price") || 200;
+      price.onchange = () => {
+        localStorage.setItem("price", price.value);
+        updateMoneyAndHealth();
+      };
+
+      perpack.value = localStorage.getItem("perpack") || 20;
+      perpack.onchange = () => {
+        localStorage.setItem("perpack", perpack.value);
+        updateMoneyAndHealth();
+      };
+
+      exportBtn.onclick = () => {
+        const data = {
+          daily: daily(),
+          history: history(),
+          presets: jget("presets", [60, 45, 90]),
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "smoketimer-backup.json";
+        a.click();
+      };
+
+      file.onchange = (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        f.text().then((t) => {
+          try {
+            const d = JSON.parse(t);
+            Object.entries(d).forEach(([k, v]) => jset(k, v));
+            show("Restored");
+            location.reload();
+          } catch {
+            show("Invalid file");
+          }
+        });
+      };
+
+      (function init() {
+        renderPresets();
+        updateCounts();
+
+        if (localStorage.getItem("until")) {
+          start.style.display = "none";
+          pause.style.display = "block";
+
+          const until = parseInt(localStorage.getItem("until"));
+          const total =
+            parseInt(localStorage.getItem("total")) || minutes * 60000;
+
+          requestAnimationFrame(() => tick(until, total)); /* smooth restore */
+
+          interval = setInterval(() => tick(until, total), 1000);
+        }
+
+        if ("serviceWorker" in navigator)
+          navigator.serviceWorker.register("sw.js");
+
+        if ("Notification" in window && Notification.permission === "default")
+          Notification.requestPermission();
+
+        draw();
+      })();
+    </script>
+
+    <!-- NICE CONFIRM SHEET -->
+    <div id="confirmWrap" style="display: none">
+      <div
+        style="
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.55);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <div
+          style="
+            background: #151515;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
+            padding: 16px;
+            width: 88%;
+            max-width: 380px;
+            text-align: center;
+          "
+        >
+          <div
+            id="confirmMsg"
+            style="margin-bottom: 14px; font-size: 0.95rem; opacity: 0.9"
+          ></div>
+
+          <button
+            id="confirmYes"
+            style="
+              width: 100%;
+              padding: 10px;
+              border-radius: 10px;
+              border: none;
+              background: #ef4444;
+              color: #fff;
+              margin-bottom: 8px;
+              font-size: 0.95rem;
+            "
+          >
+            Yes
+          </button>
+
+          <button
+            id="confirmNo"
+            style="
+              width: 100%;
+              padding: 10px;
+              border-radius: 10px;
+              border: none;
+              background: #333;
+              color: #ddd;
+              font-size: 0.95rem;
+            "
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const confirmWrap = $("confirmWrap"),
+        confirmMsg = $("confirmMsg"),
+        confirmYes = $("confirmYes"),
+        confirmNo = $("confirmNo");
+
+      function niceConfirm(message) {
+        return new Promise((resolve) => {
+          confirmMsg.textContent = message;
+          confirmWrap.style.display = "block";
+          const close = (v) => {
+            confirmWrap.style.display = "none";
+            confirmYes.onclick = confirmNo.onclick = null;
+            resolve(v);
+          };
+          confirmYes.onclick = () => close(true);
+          confirmNo.onclick = () => close(false);
+        });
+      }
+    </script>
+    <div
+      style="
+        text-align: center;
+        opacity: 0.6;
+        padding: 12px 0;
+        font-size: 0.8rem;
+      "
+    >
+      developed by a fellow sufferer —
+      <a
+        href="https://shreesha99.github.io/personal-website/"
+        style="color: #4ade80"
+      >
+        visit site
+      </a>
+    </div>
+  </body>
 </html>
