@@ -156,10 +156,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = JSON.parse(download.body);
 
-      Object.entries(data).forEach(([k, v]) => jset(k, v));
+Object.entries(data).forEach(([k, v]) => jset(k, v));
 
-      show("Restored from Drive");
-      location.reload();
+updateCounts();
+draw();
+show("Restored from Drive — data updated");
+
     } catch (e) {
       console.error(e);
       show("Restore failed — try again");
