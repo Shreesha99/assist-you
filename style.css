@@ -19,47 +19,65 @@ body {
   font-family: -apple-system, system-ui;
 }
 
-.loader {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: grid;
-  place-items: center;
-  z-index: 9999;
+.appHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px 2px;
 }
 
-.spinner {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 3px solid rgba(255, 255, 255, 0.25);
-  border-top-color: #4ade80;
-  animation: spin 0.9s linear infinite;
+.appHeader .title {
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.appHeader .subtitle {
+  font-size: 0.78rem;
+  opacity: 0.7;
 }
 
-.shell {
+.miniDisclaimer {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  opacity: 0.75;
+  text-align: center;
+}
+.miniDisclaimer span {
+  color: #4ade80;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+/* ========== LAYOUT ========== */
+
+.app {
   max-width: 520px;
   margin: 0 auto;
-  padding: 10px 10px 18px;
+  padding-bottom: 68px; /* space for tabs */
+}
+
+.page {
+  padding: 10px;
+  display: none;
+}
+
+.page.active {
+  display: block;
 }
 
 .card {
   background: var(--panel);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 18px;
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.35);
-  padding: 20px;
+  padding: 14px 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
 }
 
+/* ========== HEADERS / TEXT ========== */
+
 h1 {
-  margin: 0 0 6px;
-  font-size: 1.25rem;
+  margin: 0 0 4px;
+  font-size: 1.22rem;
 }
 
 .sub {
@@ -68,10 +86,23 @@ h1 {
   margin-bottom: 6px;
 }
 
+.sectionTitle {
+  margin: 10px 0 6px;
+  font-size: 0.92rem;
+  opacity: 0.95;
+}
+
+.info {
+  font-size: 0.8rem;
+  min-height: 16px;
+}
+
+/* ========== TIMER ========== */
+
 .circle {
   width: 190px;
   height: 190px;
-  margin: 8px auto 6px;
+  margin: 8px auto;
   position: relative;
 }
 
@@ -104,13 +135,15 @@ svg {
   font-size: 2.2rem;
 }
 
+/* ========== BUTTONS ========== */
+
 .btn {
   width: 100%;
-  padding: 14px;
-  margin-top: 8px;
+  padding: 11px;
+  margin-top: 6px;
   border: none;
   border-radius: 14px;
-  font-size: 1rem;
+  font-size: 0.92rem;
   cursor: pointer;
 }
 
@@ -118,51 +151,26 @@ svg {
   background: var(--accent);
   color: #000;
 }
-
 .secondary {
   background: #38bdf8;
   color: #000;
 }
-
 .danger {
   background: #ef4444;
   color: #fff;
 }
-
-.info {
-  font-size: 0.85rem;
-  margin: 4px 0 8px;
-  min-height: 18px;
+#skip {
+  background: #1f2937;
+  color: #fff;
 }
 
-.badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 30px;
-  font-size: 0.75rem;
-  margin-top: 4px;
-}
-
-.badge.good {
-  background: #064e3b;
-  color: #4ade80;
-}
-
-.badge.warn {
-  background: #45240e;
-  color: #fbbf24;
-}
-
-.badge.danger {
-  background: #3b0b0b;
-  color: #f87171;
-}
+/* ========== PILLS (presets) ========== */
 
 .pills {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .pill {
@@ -179,51 +187,69 @@ svg {
   opacity: 1;
 }
 
-.sectionTitle {
-  margin: 14px 0 4px;
-  font-size: 0.95rem;
-  opacity: 0.95;
-}
+/* ========== METRICS / BADGES ========== */
 
 .metricBox {
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 10px;
-  margin-top: 6px;
+  padding: 8px 10px;
   background: #101010;
 }
 
 .metric {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
-  margin: 4px 0;
+  font-size: 0.82rem;
+  margin: 3px 0;
 }
 
+/* progress bar */
 .barWrap {
-  margin-top: 6px;
-  height: 10px;
+  height: 8px;
   border-radius: 10px;
   background: #232323;
+  margin-top: 4px;
 }
 
 .bar {
   height: 100%;
   border-radius: 10px;
-  background: linear-gradient(90deg, #4ade80, #22c55e);
   width: 0%;
-  transition: 0.35s;
+  background: linear-gradient(90deg, #4ade80, #22c55e);
 }
 
+/* badges */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.badge.good {
+  background: #064e3b;
+  color: #4ade80;
+}
+.badge.warn {
+  background: #45240e;
+  color: #fbbf24;
+}
+.badge.danger {
+  background: #3b0b0b;
+  color: #f87171;
+}
+
+/* fun cards */
 .funCard {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 7px;
-  padding: 8px 10px;
-  background: #0e0e0e;
+  margin-top: 5px;
+  padding: 7px 9px;
   border-radius: 12px;
+  background: #0e0e0e;
   border: 1px solid #1f1f1f;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .funCard span {
@@ -231,24 +257,27 @@ svg {
   opacity: 0.85;
 }
 
+/* CANVAS */
 .canvasWrap {
-  margin-top: 10px;
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 10px;
+  margin-top: 6px;
 }
 
 canvas {
   width: 100%;
-  height: 130px;
+  height: 140px;
 }
+
+/* ========== SETTINGS ========== */
 
 .row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 8px 0;
-  font-size: 0.85rem;
+  margin: 6px 0;
+  font-size: 0.82rem;
 }
 
 input[type="number"],
@@ -256,59 +285,109 @@ select {
   background: #0d0d0d;
   border: 1px solid #333;
   color: #fff;
-  padding: 6px 8px;
+  padding: 5px 6px;
   border-radius: 8px;
 }
 
-.toggle {
-  appearance: none;
-  width: 36px;
-  height: 20px;
-  border-radius: 20px;
-  background: #555;
-  cursor: pointer;
-  position: relative;
+.settingsGroupTitle {
+  margin: 14px 0 6px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.55;
 }
 
+.dangerTitle {
+  color: #f87171;
+}
+
+/* toggles */
+.toggle {
+  appearance: none;
+  width: 34px;
+  height: 18px;
+  border-radius: 20px;
+  background: #555;
+  position: relative;
+}
 .toggle:checked {
   background: #4ade80;
 }
-
 .toggle:before {
   content: "";
   position: absolute;
-  top: 3px;
-  left: 3px;
+  top: 2px;
+  left: 2px;
   width: 14px;
   height: 14px;
   border-radius: 50%;
   background: #fff;
   transition: 0.2s;
 }
-
 .toggle:checked:before {
-  transform: translateX(16px);
+  transform: translateX(14px);
 }
+
+/* ========== TABS ========== */
+
+.tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0d0d0d;
+  border-top: 1px solid #222;
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0;
+}
+
+.tab {
+  text-align: center;
+  color: #aaa;
+  flex: 1;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.tab i {
+  display: block;
+  font-size: 1.2rem;
+}
+
+.tab.active {
+  color: #4ade80;
+}
+
+/* ========== TOAST (ABOVE TABS, NO OVERLAP) ========== */
 
 .toast {
   position: fixed;
-  bottom: 16px;
+  bottom: 76px; /* sits ABOVE the tabs */
   left: 50%;
-  transform: translateX(-50%) translateY(200%);
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  visibility: hidden;
+
   background: #22c55e;
   color: #000;
   padding: 10px 14px;
   border-radius: 14px;
   font-size: 0.9rem;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
-  transition: 0.32s;
+
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
+  pointer-events: none;
+  z-index: 1200; /* always above tabs */
 }
 
 .toast.show {
+  opacity: 1;
   transform: translateX(-50%) translateY(0);
+  visibility: visible;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-/* urge selectors */
+/* ========== URGE POPUP / REASONS ========== */
 
 .urge-grid {
   display: grid;
@@ -326,23 +405,13 @@ select {
   cursor: pointer;
   background: #111;
 }
-
 .urge-btn span {
   display: block;
   font-size: 1.2rem;
 }
-
 .urge-btn.active {
   background: #1f2937;
   border-color: #4ade80;
-}
-
-.urge-label {
-  text-align: center;
-  opacity: 0.75;
-  font-size: 0.8rem;
-  margin-top: 4px;
-  min-height: 18px;
 }
 
 .reason-grid {
@@ -361,15 +430,15 @@ select {
   font-size: 0.75rem;
   cursor: pointer;
 }
-
 .reason.active {
   border-color: #4ade80;
   background: #1f2937;
 }
 
-/* urge popup overlay */
+/* ========== POPUPS ========== */
 
-.urge-overlay {
+.urge-overlay,
+.confirm-overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -379,7 +448,8 @@ select {
   z-index: 999;
 }
 
-.urge-card {
+.urge-card,
+.confirm-card {
   background: #151515;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 18px;
@@ -388,44 +458,103 @@ select {
   max-width: 380px;
 }
 
-/* confirm popup */
-
-.confirm-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  align-items: center;
-  justify-content: center;
-}
-
 .confirm-card {
-  background: #151515;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 18px;
-  padding: 16px;
-  width: 88%;
-  max-width: 380px;
   text-align: center;
 }
 
-.confirm-yes {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: #ef4444;
-  color: #fff;
-  margin-bottom: 8px;
-  font-size: 0.95rem;
-}
-
+.confirm-yes,
 .confirm-no {
   width: 100%;
   padding: 10px;
   border-radius: 10px;
   border: none;
+  font-size: 0.9rem;
+}
+
+.confirm-yes {
+  background: #ef4444;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.confirm-no {
   background: #333;
   color: #ddd;
-  font-size: 0.95rem;
+}
+
+/* ========== LOADER ========== */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #4ade80;
+  animation: spin 0.9s linear infinite;
+}
+
+/* ===== ICON ACTION GRID ===== */
+
+.actionGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.actionBtn {
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  border-radius: 14px;
+  padding: 10px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.actionBtn:hover {
+  background: #161616;
+}
+
+.actionBtn i {
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.actionBtn span {
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
+
+.dangerAct {
+  border-color: #4a1b1b;
+  background: #1a0b0b;
+}
+
+.dangerAct i,
+.dangerAct span {
+  color: #f87171;
+}
+
+.dangerAct:hover {
+  background: #2b0d0d;
+}
+
+.actionBtn.active {
+  background: #1b2a1b;
+  border-color: #2f4f2f;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

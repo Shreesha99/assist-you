@@ -5,8 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
     "424180784069-bo0lo5dms4vcn59mianh5j7oa85nioou.apps.googleusercontent.com";
 
   const API_KEY = "AIzaSyBjN0DWe-DASx8aOv4jrq0YIbv3Vsf56R8";
-
   const SCOPE = "https://www.googleapis.com/auth/drive.file";
+
+  const driveLogin = $("driveLogin");
+  const driveBackup = $("driveBackup");
+  const driveRestore = $("driveRestore");
 
   function loadGapi(retries = 3) {
     return new Promise((resolve, reject) => {
@@ -31,6 +34,50 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  /* ---------- LOGIN STATE HELPERS ---------- */
+
+  function isLoggedIn() {
+    return !!googleUser;
+  }
+
+  function logoutDrive() {
+    googleUser = null;
+    localStorage.removeItem("driveToken");
+    localStorage.removeItem("driveTokenExpiry");
+    show("Signed out");
+    updateDriveUI();
+  }
+
+  function updateDriveUI() {
+    if (isLoggedIn()) {
+      driveLogin.innerHTML = `<i class="bi bi-box-arrow-right"></i> Logout`;
+      driveBackup.disabled = false;
+      driveRestore.disabled = false;
+    } else {
+      driveLogin.innerHTML = `<i class="bi bi-google"></i> Sign in`;
+      driveBackup.disabled = true;
+      driveRestore.disabled = true;
+    }
+  }
+
+  /* ---------- SILENT RESTORE (NO POPUPS) ---------- */
+
+  async function trySilentLogin() {
+    const token = localStorage.getItem("driveToken");
+    const exp = parseInt(localStorage.getItem("driveTokenExpiry") || 0);
+
+    if (!token || Date.now() > exp) {
+      updateDriveUI();
+      return;
+    }
+
+    googleUser = { access_token: token };
+    show("Drive connected");
+    updateDriveUI();
+  }
+
+  trySilentLogin();
+
   function showLoader() {
     $("loader").style.display = "grid";
   }
@@ -39,13 +86,12 @@ document.addEventListener("DOMContentLoaded", () => {
     $("loader").style.display = "none";
   }
 
-  // ——— BUTTONS ———
-  const driveLogin = $("driveLogin");
-  const driveBackup = $("driveBackup");
-  const driveRestore = $("driveRestore");
+  /* ---------- SIGN IN / LOG OUT BUTTON ---------- */
 
-  // ——— SIGN IN ———
   driveLogin.onclick = async () => {
+    // already logged in → LOG OUT
+    if (isLoggedIn()) return logoutDrive();
+
     try {
       showLoader();
       await loadGapi();
@@ -55,8 +101,14 @@ document.addEventListener("DOMContentLoaded", () => {
         scope: SCOPE,
         callback: (t) => {
           googleUser = t;
+
+          const expires = Date.now() + t.expires_in * 1000;
+          localStorage.setItem("driveToken", t.access_token);
+          localStorage.setItem("driveTokenExpiry", expires);
+
           hideLoader();
           show("Signed in successfully");
+          updateDriveUI();
         },
       });
 
@@ -68,9 +120,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // ——— BACKUP ———
+  /* ---------- BACKUP ---------- */
+
   driveBackup.onclick = async () => {
-    if (!googleUser) return show("Sign in first");
+    if (!isLoggedIn()) return show("Sign in first");
 
     driveBackup.disabled = true;
     showLoader();
@@ -115,20 +168,20 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       if (!res.ok) throw new Error("Upload failed");
-
       show("Backed up to Drive");
     } catch (e) {
       console.error(e);
       show("Backup failed — please try again");
     } finally {
       hideLoader();
-      driveBackup.disabled = false;
+      updateDriveUI();
     }
   };
 
-  // ——— RESTORE ———
+  /* ---------- RESTORE ---------- */
+
   driveRestore.onclick = async () => {
-    if (!googleUser) return show("Sign in first");
+    if (!isLoggedIn()) return show("Sign in first");
 
     driveRestore.disabled = true;
     showLoader();
@@ -156,18 +209,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = JSON.parse(download.body);
 
-Object.entries(data).forEach(([k, v]) => jset(k, v));
+      Object.entries(data).forEach(([k, v]) => jset(k, v));
 
-updateCounts();
-draw();
-show("Restored from Drive — data updated");
-
+      updateCounts();
+      draw();
+      show("Restored from Drive — data updated");
     } catch (e) {
       console.error(e);
       show("Restore failed — try again");
     } finally {
       hideLoader();
-      driveRestore.disabled = false;
+      updateDriveUI();
     }
   };
 });

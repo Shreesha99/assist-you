@@ -57,7 +57,10 @@ const skipLog = () => jget("skips", []);
 function show(m) {
   toast.textContent = m;
   toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2200);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2200);
 }
 
 // reminder
