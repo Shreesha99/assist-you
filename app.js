@@ -1131,10 +1131,10 @@ function enhanceTimer() {
     : minutes;
 
   // motivational tip
-  let tip = "Log urges when they happen — they reveal triggers.";
-  if (left === 0) tip = "Limit reached — focus on stretching the gaps. 💪";
+  let tip = "Log urges when they happen they reveal triggers.";
+  if (left === 0) tip = "Limit reached focus on stretching the gaps. 💪";
   else if (streakDays() >= 5) tip = "Great streak. Tiny increases work best.";
-  else if (avg > minutes) tip = "You’re already improving — keep going.";
+  else if (avg > minutes) tip = "You’re already improving keep going.";
   else if (todayCount === 0) tip = "Perfect start today. Stay steady.";
 
   extra.innerHTML = `
