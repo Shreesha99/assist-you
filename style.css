@@ -140,30 +140,47 @@ svg {
   font-size: 2.2rem;
 }
 
+.timerSection {
+  margin-bottom: 14px;
+}
+
+.toolsRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.toolsRow .btn {
+  flex: 1;
+}
+
 /* ========== BUTTONS ========== */
 
 .btn {
   width: 100%;
-  padding: 11px;
   margin-top: 6px;
   border: none;
-  border-radius: 14px;
   font-size: 0.92rem;
   cursor: pointer;
+  padding: 9px 10px;
+  border-radius: 12px;
+  font-weight: 400;
 }
 
 .primary {
-  background: var(--accent);
-  color: #000;
+  background: linear-gradient(180deg, #45d973, #2fb162);
+  color: #021;
 }
+
 .secondary {
-  background: #38bdf8;
-  color: #000;
+  background: #2a9fd6;
+  color: #021;
 }
+
 .danger {
-  background: #ef4444;
-  color: #fff;
+  background: #c93c3c;
 }
+
 #skip {
   background: #1f2937;
   color: #fff;
