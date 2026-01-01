@@ -16,7 +16,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, system-ui;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 .appHeader {
@@ -524,10 +524,6 @@ select {
   transition: 0.15s;
 }
 
-.actionBtn:hover {
-  background: #161616;
-}
-
 .actionBtn i {
   font-size: 1.3rem;
   display: block;
@@ -547,10 +543,6 @@ select {
 .dangerAct i,
 .dangerAct span {
   color: #f87171;
-}
-
-.dangerAct:hover {
-  background: #2b0d0d;
 }
 
 .actionBtn.active {
@@ -624,7 +616,7 @@ select {
 /* timer number */
 .timerText {
   font-size: 2.8rem;
-  font-weight: 700;
+  font-weight: 200;
   letter-spacing: 0.04em;
 }
 
@@ -644,18 +636,10 @@ select {
   transition: transform 0.12s ease, box-shadow 0.16s ease;
 }
 
-#tab-timer .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
-}
-
 /* skip button: more “optional” but still premium */
 #skip {
   background: #111827;
   border: 1px solid #1f2937;
-}
-#skip:hover {
-  background: #162036;
 }
 
 /* Presets look like chips */
