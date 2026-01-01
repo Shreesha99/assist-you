@@ -105,21 +105,6 @@ h1 {
   min-height: 16px;
 }
 
-/* =========================================================
-   TIMER TAB – SPACING & DE-CLUTTER PASS (NON-DESTRUCTIVE)
-   Mobile-first, respects existing styles
-========================================================= */
-
-/* Card padding slightly increased */
-#tab-timer .card {
-  padding: 18px 16px 22px;
-}
-
-/* Give vertical rhythm between top-level sections */
-#tab-timer .card > * + * {
-  margin-top: 14px;
-}
-
 /* Header block spacing */
 #tab-timer h1 {
   margin-bottom: 4px;
@@ -132,11 +117,6 @@ h1 {
 /* Last-smoked text gets its own breathing room */
 #since {
   margin: 10px 0 6px;
-}
-
-/* TIMER CORE */
-.timerSection {
-  margin: 20px 0 22px;
 }
 
 /* Ring is the hero — give it space */
@@ -153,12 +133,6 @@ h1 {
 #start,
 #pause {
   margin-top: 14px;
-}
-
-/* Secondary tools row feels lighter */
-.toolsRow {
-  margin-top: 14px;
-  gap: 10px;
 }
 
 .toolsRow .btn {
@@ -204,15 +178,17 @@ h1 {
 /* ========== TIMER ========== */
 
 .circle {
-  width: 190px;
-  height: 190px;
   margin: 8px auto;
   position: relative;
 }
 
+.circle,
 svg {
   width: 190px;
   height: 190px;
+}
+
+svg {
   transform: rotate(-90deg);
 }
 
@@ -257,13 +233,17 @@ svg {
 
 .btn {
   width: 100%;
-  margin-top: 6px;
   border: none;
   font-size: 0.92rem;
   cursor: pointer;
   padding: 9px 10px;
   border-radius: 12px;
   font-weight: 400;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .primary {
@@ -673,10 +653,9 @@ select {
   background: linear-gradient(180deg, #141414, #0d0d0d);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  padding: 18px 14px 20px;
+  padding: 18px 16px 22px;
 }
 
-/* Group spacing instead of element spacing */
 #tab-timer .card > * + * {
   margin-top: 14px;
 }
@@ -770,6 +749,7 @@ select {
   opacity: 0.95;
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
+
 #tab-timer .pill.active {
   background: rgba(255, 255, 255, 0.14);
 }
@@ -827,15 +807,6 @@ select {
 /* Ensure skip feels secondary */
 .skipBtn span {
   font-size: 0.82rem;
-}
-
-/* === HARD FIX: BOOTSTRAP ICON ALIGNMENT === */
-
-.btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
 }
 
 /* Kill font-metric weirdness */

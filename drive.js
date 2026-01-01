@@ -11,6 +11,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const driveBackup = $("driveBackup");
   const driveRestore = $("driveRestore");
 
+  let pendingDriveAction = null;
+
+  function isOnline() {
+    return navigator.onLine;
+  }
+
+  function needInternet() {
+    show("Connect to the internet to continue");
+  }
+
+  window.addEventListener("online", async () => {
+    if (!pendingDriveAction) return;
+
+    show("Back online — finishing your request…");
+
+    const action = pendingDriveAction;
+    pendingDriveAction = null;
+
+    await action();
+  });
+
+  window.addEventListener("offline", () => {
+    show("You're offline");
+  });
+
   function loadGapi(retries = 3) {
     return new Promise((resolve, reject) => {
       gapi.load("client", async () => {
@@ -67,12 +92,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const exp = parseInt(localStorage.getItem("driveTokenExpiry") || 0);
 
     if (!token || Date.now() > exp) {
+      googleUser = null;
       updateDriveUI();
       return;
     }
 
     googleUser = { access_token: token };
-    show("Drive connected");
     updateDriveUI();
   }
 
@@ -89,8 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---------- SIGN IN / LOG OUT BUTTON ---------- */
 
   driveLogin.onclick = async () => {
-    // already logged in → LOG OUT
     if (isLoggedIn()) return logoutDrive();
+
+    if (!isOnline()) {
+      needInternet();
+      pendingDriveAction = driveLogin.onclick;
+      return;
+    }
 
     try {
       showLoader();
@@ -124,6 +154,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   driveBackup.onclick = async () => {
     if (!isLoggedIn()) return show("Sign in first");
+
+    if (!isOnline()) {
+      needInternet();
+      pendingDriveAction = driveBackup.onclick;
+      return;
+    }
 
     driveBackup.disabled = true;
     showLoader();
@@ -182,6 +218,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   driveRestore.onclick = async () => {
     if (!isLoggedIn()) return show("Sign in first");
+
+    if (!isOnline()) {
+      needInternet();
+      pendingDriveAction = driveRestore.onclick;
+      return;
+    }
 
     driveRestore.disabled = true;
     showLoader();
