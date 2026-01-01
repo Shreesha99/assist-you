@@ -21,9 +21,12 @@ body {
 
 .appHeader {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 10px;
   padding: 10px 12px 2px;
+  width: 100%;
 }
 
 .appHeader .title {
@@ -102,6 +105,102 @@ h1 {
   min-height: 16px;
 }
 
+/* =========================================================
+   TIMER TAB – SPACING & DE-CLUTTER PASS (NON-DESTRUCTIVE)
+   Mobile-first, respects existing styles
+========================================================= */
+
+/* Card padding slightly increased */
+#tab-timer .card {
+  padding: 18px 16px 22px;
+}
+
+/* Give vertical rhythm between top-level sections */
+#tab-timer .card > * + * {
+  margin-top: 14px;
+}
+
+/* Header block spacing */
+#tab-timer h1 {
+  margin-bottom: 4px;
+}
+
+#tab-timer .sub {
+  margin-bottom: 10px;
+}
+
+/* Last-smoked text gets its own breathing room */
+#since {
+  margin: 10px 0 6px;
+}
+
+/* TIMER CORE */
+.timerSection {
+  margin: 20px 0 22px;
+}
+
+/* Ring is the hero — give it space */
+#tab-timer .circle {
+  margin: 22px auto 16px;
+}
+
+/* Timer number stays centered, no visual noise */
+.timerText {
+  line-height: 1;
+}
+
+/* Primary action separation */
+#start,
+#pause {
+  margin-top: 14px;
+}
+
+/* Secondary tools row feels lighter */
+.toolsRow {
+  margin-top: 14px;
+  gap: 10px;
+}
+
+.toolsRow .btn {
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* Presets are configuration — visually separated */
+#presets {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+/* Status text floats instead of sticking */
+#status {
+  margin-top: 14px;
+  min-height: 22px;
+}
+
+/* Extra timer insights block spacing */
+#timer-extra {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Make fun cards breathe more inside timer */
+#tab-timer .funCard {
+  margin-top: 0;
+  padding: 10px 12px;
+}
+
+/* Disclaimer should feel mentally distant */
+#tab-timer .miniDisclaimer {
+  margin-top: 24px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  opacity: 0.6;
+}
+
 /* ========== TIMER ========== */
 
 .circle {
@@ -141,7 +240,7 @@ svg {
 }
 
 .timerSection {
-  margin-bottom: 14px;
+  margin: 18px 0 20px;
 }
 
 .toolsRow {
@@ -574,6 +673,12 @@ select {
   background: linear-gradient(180deg, #141414, #0d0d0d);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 18px 14px 20px;
+}
+
+/* Group spacing instead of element spacing */
+#tab-timer .card > * + * {
+  margin-top: 14px;
 }
 
 /* Title block */
