@@ -780,6 +780,78 @@ select {
   opacity: 0.6;
 }
 
+/* ================= TIMER BUTTON LAYOUT ================= */
+
+/* Primary action row */
+.primaryRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Buttons with icons */
+.primaryRow .btn,
+.skipBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Icon sizing */
+.primaryRow i,
+.skipBtn i {
+  font-size: 1.1rem;
+}
+
+/* Start / Pause / Reset share width */
+.primaryRow .btn {
+  flex: 1;
+}
+
+/* Skip button is optional, softer */
+.skipBtn {
+  margin-top: 14px;
+  background: #0f172a;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  color: #cbd5f5;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* Skip hover/active (still subtle, mobile-safe) */
+.skipBtn:active {
+  transform: scale(0.98);
+}
+
+/* Ensure skip feels secondary */
+.skipBtn span {
+  font-size: 0.82rem;
+}
+
+/* === HARD FIX: BOOTSTRAP ICON ALIGNMENT === */
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Kill font-metric weirdness */
+.btn i {
+  display: block;
+  font-size: 1.1rem;
+  line-height: 1;
+  transform: translateY(0.08em); /* optical centering */
+}
+
+/* Lock text baseline */
+.btn span {
+  line-height: 1;
+  display: block;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

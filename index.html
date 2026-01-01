@@ -45,15 +45,30 @@
             <div id="time" class="timerText">00:00</div>
           </div>
 
-          <button id="start" class="btn primary">Start</button>
-          <button id="pause" class="btn secondary" style="display: none">
-            Pause
+          <!-- Primary actions -->
+          <div class="toolsRow primaryRow">
+            <button id="start" class="btn primary">
+              <i class="bi bi-play-fill"></i>
+              <span>Start</span>
+            </button>
+
+            <button id="pause" class="btn secondary" style="display: none">
+              <i class="bi bi-pause-fill"></i>
+              <span>Pause</span>
+            </button>
+
+            <button id="reset" class="btn danger">
+              <i class="bi bi-arrow-counterclockwise"></i>
+              <span>Reset</span>
+            </button>
+          </div>
+
+          <!-- Optional action -->
+          <button id="skip" class="btn skipBtn">
+            <i class="bi bi-hand-thumbs-up"></i>
+            <span>Skip this cigarette</span>
           </button>
 
-          <div class="toolsRow">
-            <button id="reset" class="btn danger">Reset</button>
-            <button id="skip" class="btn">👍 Skip</button>
-          </div>
         </div>
 
         <div id="presets" class="pills"></div>
