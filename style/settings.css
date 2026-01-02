@@ -161,6 +161,7 @@ select {
 
 /* Stepper */
 #tab-settings #limitStepper button {
+  color: white;
   background: #1a1a1a;
   border: 1px solid #2b2b2b;
   border-radius: 10px;
