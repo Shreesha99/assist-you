@@ -1,0 +1,50 @@
+.tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0d0d0d;
+  border-top: 1px solid #222;
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0;
+}
+
+.tab {
+  text-align: center;
+  color: #aaa;
+  flex: 1;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.tab i {
+  display: block;
+  font-size: 1.2rem;
+}
+.tab.active {
+  color: #4ade80;
+}
+
+/* toast */
+.toast {
+  position: fixed;
+  bottom: 76px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  visibility: hidden;
+  background: #22c55e;
+  color: #000;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  transition: opacity 0.25s, transform 0.25s, visibility 0s 0.25s;
+  pointer-events: none;
+  z-index: 1200;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  visibility: visible;
+  transition: opacity 0.25s, transform 0.25s;
+}

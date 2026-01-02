@@ -1,0 +1,152 @@
+#tab-timer h1 {
+  margin-bottom: 2px;
+  font-size: 1.34rem;
+  font-weight: 700;
+}
+#tab-timer .sub {
+  font-size: 0.85rem;
+  opacity: 0.82;
+  margin-bottom: 12px;
+}
+
+/* last smoked */
+#since {
+  margin: 10px 0 6px;
+  text-align: center;
+  font-weight: 600;
+  opacity: 0.9;
+  letter-spacing: 0.01em;
+}
+
+/* ring */
+.circle,
+svg {
+  width: 190px;
+  height: 190px;
+}
+.circle {
+  margin: 14px auto 6px;
+  position: relative;
+}
+svg {
+  transform: rotate(-90deg);
+}
+
+.bg {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 10;
+  fill: none;
+}
+
+.fg {
+  stroke: var(--accent);
+  stroke-width: 10;
+  stroke-linecap: round;
+  fill: none;
+  transition: stroke-dashoffset 0.6s ease;
+  filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.35));
+}
+
+.fg.cooling {
+  animation: breatheTimer 2.4s ease-in-out infinite;
+}
+
+@keyframes breatheTimer {
+  0% {
+    filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 14px rgba(74, 222, 128, 0.55));
+  }
+  100% {
+    filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.25));
+  }
+}
+
+/* time text */
+.timerText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  font-weight: 200;
+  letter-spacing: 0.04em;
+}
+
+.timerSection {
+  margin: 18px 0 20px;
+}
+
+#status {
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* premium timer card */
+#tab-timer .card {
+  background: linear-gradient(180deg, #141414, #0d0d0d);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 18px 16px 22px;
+}
+#tab-timer .card > * + * {
+  margin-top: 14px;
+}
+
+/* rows */
+.toolsRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+.primaryRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.primaryRow .btn {
+  flex: 1;
+}
+
+/* skip */
+.skipBtn {
+  margin-top: 14px;
+  background: #0f172a;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  color: #cbd5f5;
+  font-weight: 500;
+  opacity: 0.9;
+}
+.skipBtn:active {
+  transform: scale(0.98);
+}
+.skipBtn span {
+  font-size: 0.82rem;
+}
+
+/* presets divider */
+#presets {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+/* extra info zone */
+#timer-extra {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* disclaimer spacing */
+#tab-timer .miniDisclaimer {
+  margin-top: 14px;
+  opacity: 0.6;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}

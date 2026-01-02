@@ -1,0 +1,112 @@
+.urge-overlay,
+.confirm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.urge-card,
+.confirm-card {
+  background: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  padding: 14px;
+  width: 92%;
+  max-width: 380px;
+}
+
+.confirm-card {
+  text-align: center;
+}
+
+.confirm-yes,
+.confirm-no {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.9rem;
+}
+.confirm-yes {
+  background: #ef4444;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.confirm-no {
+  background: #333;
+  color: #ddd;
+}
+
+/* urge strength */
+.urge-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin: 6px 0;
+}
+.urge-btn {
+  padding: 8px 0;
+  border: 1px solid #2b2b2b;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+  background: #111;
+}
+.urge-btn span {
+  display: block;
+  font-size: 1.2rem;
+}
+.urge-btn.active {
+  background: #1f2937;
+  border-color: #4ade80;
+}
+
+/* reasons */
+.reason-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+.reason {
+  background: #0f172a;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 6px;
+  text-align: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.reason.active {
+  border-color: #4ade80;
+  background: #1f2937;
+}
+
+/* loader */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+.spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #4ade80;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

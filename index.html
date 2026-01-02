@@ -1,506 +1,543 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Smoke Timer</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Smoke Timer</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="style/base.css" />
+    <link rel="stylesheet" href="style/layout.css" />
+    <link rel="stylesheet" href="style/components.css" />
+    <link rel="stylesheet" href="style/timer.css" />
+    <link rel="stylesheet" href="style/tabs.css" />
+    <link rel="stylesheet" href="style/popups.css" />
+    <link rel="stylesheet" href="style/settings.css" />
+    <link rel="stylesheet" href="style/analytics.css" />
 
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Smoke Timer" />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn.jsdelivr.net/npm/remixicon/icons/Health/heart-pulse-fill.svg"
+    />
 
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Smoke Timer" />
-  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/remixicon/icons/Health/heart-pulse-fill.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+  </head>
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="https://apis.google.com/js/api.js"></script>
-</head>
-
-<body>
-  <div class="app">
-    <div class="appHeader">
-      <div class="title">Assist you</div>
-      <div class="subtitle">One cooldown at a time</div>
-
-    </div>
-
-    <!-- ===== TIMER TAB ===== -->
-    <div class="page active" id="tab-timer">
-      <div class="card">
-        <h1>Timer</h1>
-        <div class="sub">One cigarette per cooldown</div>
-
-        <div id="since" class="info"></div>
-        <div class="timerSection">
-          <div class="circle">
-            <svg>
-              <circle class="bg" cx="95" cy="95" r="80"></circle>
-              <circle id="ring" class="fg" cx="95" cy="95" r="80"></circle>
-            </svg>
-            <div id="time" class="timerText">00:00</div>
-          </div>
-
-          <!-- Primary actions -->
-          <div class="toolsRow primaryRow">
-            <button id="start" class="btn primary">
-              <i class="bi bi-play-fill"></i>
-              <span>Start</span>
-            </button>
-
-            <button id="pause" class="btn secondary" style="display: none">
-              <i class="bi bi-pause-fill"></i>
-              <span>Pause</span>
-            </button>
-
-            <button id="reset" class="btn danger">
-              <i class="bi bi-arrow-counterclockwise"></i>
-              <span>Reset</span>
-            </button>
-          </div>
-
-          <!-- Optional action -->
-          <button id="skip" class="btn skipBtn">
-            <i class="bi bi-hand-thumbs-up"></i>
-            <span>Skip this cigarette</span>
-          </button>
-
-        </div>
-
-        <div id="presets" class="pills"></div>
-        <div id="status" class="info">
-          <span id="statusText"></span>
-        </div>
-        <div class="miniDisclaimer">
-          ⚠️ Harm-reduction tool — not medical advice.
-          <span id="openDisclaimer">Read more</span>
-        </div>
+  <body>
+    <div class="app">
+      <div class="appHeader">
+        <div class="title">Assist you</div>
+        <div class="subtitle">One cooldown at a time</div>
       </div>
-    </div>
 
-    <!-- ===== TODAY TAB ===== -->
-    <div class="page" id="tab-today">
-      <div class="card">
-        <div class="sectionTitle">Today</div>
+      <!-- ===== TIMER TAB ===== -->
+      <div class="page active" id="tab-timer">
+        <div class="card">
+          <h1>Timer</h1>
+          <div class="sub">One cigarette per cooldown</div>
 
-        <div class="metricBox">
-          <div class="metric">
-            <span>Cigarettes</span><span id="today"></span>
-          </div>
+          <div id="since" class="info"></div>
+          <div class="timerSection">
+            <div class="circle">
+              <svg>
+                <circle class="bg" cx="95" cy="95" r="80"></circle>
+                <circle id="ring" class="fg" cx="95" cy="95" r="80"></circle>
+              </svg>
+              <div id="time" class="timerText">00:00</div>
+            </div>
 
-          <div class="barWrap">
-            <div id="limitBar" class="bar"></div>
-          </div>
-          <div id="limitBadge" class="badge good">Under limit</div>
-
-          <div class="funCard">🚬 <span id="moneyToday"></span></div>
-          <div class="funCard">❤️ <span id="lifeToday"></span></div>
-          <div class="funCard">👟 <span id="stepsToday"></span></div>
-          <div class="funCard">⏳ <span id="timeSaved"></span></div>
-          <div class="funCard">👍 <span id="skipsCount"></span></div>
-        </div>
-
-        <div class="funCard">
-          🏁 Longest cooldown: <span id="bestGap"></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== PROGRESS TAB ===== -->
-    <div class="page" id="tab-progress">
-      <div class="card">
-        <div class="sectionTitle">Progress</div>
-
-        <div class="metricBox">
-          <div class="metric">
-            <span>Streak</span><span id="streak"></span>
-          </div>
-
-          <div class="canvasWrap">
-            <canvas id="chart"></canvas>
-            <div class="sub">Last 7 days</div>
-          </div>
-
-          <div id="recent" class="sub"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== INSIGHTS TAB ===== -->
-    <div class="page" id="tab-insights">
-      <div class="card">
-        <div class="sectionTitle">Insights</div>
-        <div id="insights" class="metricBox"></div>
-
-        <div class="sectionTitle">Achievements</div>
-        <div id="achievements" class="metricBox"></div>
-      </div>
-    </div>
-
-    <!-- ===== SETTINGS TAB ===== -->
-    <div class="page" id="tab-settings">
-      <div class="card">
-        <div class="sectionTitle">Settings</div>
-
-        <!-- PREFERENCES -->
-        <div class="settingsGroupTitle">Preferences</div>
-
-        <div class="metricBox">
-          <div class="row">
-            <span>Daily limit</span>
-
-            <div id="limitStepper" style="display: flex; align-items: center; gap: 8px">
-              <button id="limitMinus" class="btn" style="width: 32px; padding: 6px">
-                −
+            <!-- Primary actions -->
+            <div class="toolsRow primaryRow">
+              <button id="start" class="btn primary">
+                <i class="bi bi-play-fill"></i>
+                <span>Start</span>
               </button>
 
-              <div id="limitDisplay" style="min-width: 48px; text-align: center; font-weight: 600">
-                0
+              <button id="pause" class="btn secondary" style="display: none">
+                <i class="bi bi-pause-fill"></i>
+                <span>Pause</span>
+              </button>
+
+              <button id="reset" class="btn danger">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                <span>Reset</span>
+              </button>
+            </div>
+
+            <!-- Optional action -->
+            <button id="skip" class="btn skipBtn">
+              <i class="bi bi-hand-thumbs-up"></i>
+              <span>Skip this cigarette</span>
+            </button>
+          </div>
+
+          <div id="presets" class="pills"></div>
+          <div id="status" class="info">
+            <span id="statusText"></span>
+          </div>
+          <div class="miniDisclaimer">
+            ⚠️ Harm-reduction tool — not medical advice.
+            <span id="openDisclaimer">Read more</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TODAY TAB ===== -->
+      <div class="page" id="tab-today">
+        <div class="card">
+          <div class="sectionTitle">Today</div>
+
+          <div class="metricBox">
+            <div class="metric">
+              <span>Cigarettes</span><span id="today"></span>
+            </div>
+
+            <div class="barWrap">
+              <div id="limitBar" class="bar"></div>
+            </div>
+            <div id="limitBadge" class="badge good">Under limit</div>
+
+            <div class="funCard">🚬 <span id="moneyToday"></span></div>
+            <div class="funCard">❤️ <span id="lifeToday"></span></div>
+            <div class="funCard">👟 <span id="stepsToday"></span></div>
+            <div class="funCard">⏳ <span id="timeSaved"></span></div>
+            <div class="funCard">👍 <span id="skipsCount"></span></div>
+          </div>
+
+          <div class="funCard">
+            🏁 Longest cooldown: <span id="bestGap"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PROGRESS TAB ===== -->
+      <div class="page" id="tab-progress">
+        <div class="card">
+          <div class="sectionTitle">Progress</div>
+
+          <div class="metricBox">
+            <div class="metric">
+              <span>Streak</span><span id="streak"></span>
+            </div>
+
+            <div class="canvasWrap">
+              <canvas id="chart"></canvas>
+              <div class="sub">Last 7 days</div>
+            </div>
+
+            <div id="recent" class="sub"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== INSIGHTS TAB ===== -->
+      <div class="page" id="tab-insights">
+        <div class="card">
+          <div class="sectionTitle">Insights</div>
+          <div id="insights" class="metricBox"></div>
+
+          <div class="sectionTitle">Achievements</div>
+          <div id="achievements" class="metricBox"></div>
+        </div>
+      </div>
+
+      <!-- ===== SETTINGS TAB ===== -->
+      <div class="page" id="tab-settings">
+        <div class="card">
+          <div class="sectionTitle">Settings</div>
+
+          <!-- PREFERENCES -->
+          <div class="settingsGroupTitle">Preferences</div>
+
+          <div class="metricBox">
+            <div class="row">
+              <span>Daily limit</span>
+
+              <div
+                id="limitStepper"
+                style="display: flex; align-items: center; gap: 8px"
+              >
+                <button
+                  id="limitMinus"
+                  class="btn"
+                  style="width: 32px; padding: 6px"
+                >
+                  −
+                </button>
+
+                <div
+                  id="limitDisplay"
+                  style="min-width: 48px; text-align: center; font-weight: 600"
+                >
+                  0
+                </div>
+
+                <button
+                  id="limitPlus"
+                  class="btn"
+                  style="width: 32px; padding: 6px"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <input id="limit" type="hidden" />
+
+            <div class="sub" id="limitLabel" style="text-align: right">
+              0 / day
+            </div>
+
+            <div class="actionGrid">
+              <div class="actionBtn" id="nightToggle">
+                <i class="bi bi-moon"></i>
+                <span>Night mode</span>
               </div>
 
-              <button id="limitPlus" class="btn" style="width: 32px; padding: 6px">
-                +
-              </button>
+              <div class="actionBtn" id="soundBtn">
+                <i class="bi bi-volume-up"></i>
+                <span>Sound</span>
+              </div>
+
+              <div class="actionBtn" id="currencyBtn">
+                <i class="bi bi-cash-stack"></i>
+                <span>Currency</span>
+              </div>
+            </div>
+
+            <select id="soundSel" style="display: none">
+              <option value="ding">Ding</option>
+              <option value="soft">Soft</option>
+              <option value="off">Off</option>
+            </select>
+
+            <select id="currency" style="display: none">
+              <option value="₹">₹</option>
+              <option value="$">$</option>
+              <option value="€">€</option>
+            </select>
+
+            <input
+              id="manualNight"
+              type="checkbox"
+              class="toggle"
+              style="display: none"
+            />
+          </div>
+
+          <!-- REMINDERS -->
+          <div class="settingsGroupTitle">Reminders</div>
+
+          <div class="metricBox actionGrid">
+            <div class="actionBtn" id="silent">
+              <i class="bi bi-volume-mute"></i>
+              <span>Silent</span>
+            </div>
+
+            <div class="actionBtn" id="reminder">
+              <i class="bi bi-bell"></i>
+              <span>10am</span>
             </div>
           </div>
 
-          <input id="limit" type="hidden" />
+          <!-- PRESETS -->
+          <div class="settingsGroupTitle">Cooldown Presets</div>
 
-          <div class="sub" id="limitLabel" style="text-align: right">
-            0 / day
-          </div>
-
-          <div class="actionGrid">
-            <div class="actionBtn" id="nightToggle">
-              <i class="bi bi-moon"></i>
-              <span>Night mode</span>
+          <div class="metricBox">
+            <div class="row">
+              <span>Add preset (min)</span>
+              <input id="addPreset" type="number" />
             </div>
 
-            <div class="actionBtn" id="soundBtn">
-              <i class="bi bi-volume-up"></i>
-              <span>Sound</span>
+            <div class="row">
+              <span>Price per pack</span>
+              <input id="price" type="number" />
             </div>
 
-            <div class="actionBtn" id="currencyBtn">
-              <i class="bi bi-cash-stack"></i>
-              <span>Currency</span>
+            <div class="row">
+              <span>Cigs per pack</span>
+              <input id="perpack" type="number" />
             </div>
           </div>
 
-          <select id="soundSel" style="display: none">
-            <option value="ding">Ding</option>
-            <option value="soft">Soft</option>
-            <option value="off">Off</option>
-          </select>
+          <!-- DATA & BACKUP -->
+          <div class="settingsGroupTitle">Data & Backup</div>
 
-          <select id="currency" style="display: none">
-            <option value="₹">₹</option>
-            <option value="$">$</option>
-            <option value="€">€</option>
-          </select>
+          <div class="metricBox actionGrid">
+            <div class="actionBtn" id="export">
+              <i class="bi bi-box-arrow-up"></i>
+              <span>Export</span>
+            </div>
 
-          <input id="manualNight" type="checkbox" class="toggle" style="display: none" />
-        </div>
+            <div class="actionBtn" id="driveLogin">
+              <i class="bi bi-google"></i>
+              <span>Sign in</span>
+            </div>
 
-        <!-- REMINDERS -->
-        <div class="settingsGroupTitle">Reminders</div>
+            <div class="actionBtn" id="driveBackup">
+              <i class="bi bi-cloud-upload"></i>
+              <span>Backup</span>
+            </div>
 
-        <div class="metricBox actionGrid">
-          <div class="actionBtn" id="silent">
-            <i class="bi bi-volume-mute"></i>
-            <span>Silent</span>
+            <div class="actionBtn" id="driveRestore">
+              <i class="bi bi-cloud-download"></i>
+              <span>Restore</span>
+            </div>
+
+            <div class="row" style="grid-column: 1/-1">
+              <span>Import file</span>
+              <input id="file" type="file" accept="application/json" />
+            </div>
           </div>
 
-          <div class="actionBtn" id="reminder">
-            <i class="bi bi-bell"></i>
-            <span>10am</span>
-          </div>
-        </div>
+          <!-- DANGER ZONE -->
+          <div class="settingsGroupTitle dangerTitle">Danger Zone</div>
 
-        <!-- PRESETS -->
-        <div class="settingsGroupTitle">Cooldown Presets</div>
+          <div class="metricBox actionGrid">
+            <div class="actionBtn dangerAct" id="undo">
+              <i class="bi bi-arrow-counterclockwise"></i>
+              <span>Undo last log</span>
+            </div>
 
-        <div class="metricBox">
-          <div class="row">
-            <span>Add preset (min)</span>
-            <input id="addPreset" type="number" />
-          </div>
+            <div class="actionBtn dangerAct" id="clearToday">
+              <i class="bi bi-calendar-x"></i>
+              <span>Today</span>
+            </div>
 
-          <div class="row">
-            <span>Price per pack</span>
-            <input id="price" type="number" />
-          </div>
-
-          <div class="row">
-            <span>Cigs per pack</span>
-            <input id="perpack" type="number" />
-          </div>
-        </div>
-
-        <!-- DATA & BACKUP -->
-        <div class="settingsGroupTitle">Data & Backup</div>
-
-        <div class="metricBox actionGrid">
-          <div class="actionBtn" id="export">
-            <i class="bi bi-box-arrow-up"></i>
-            <span>Export</span>
-          </div>
-
-          <div class="actionBtn" id="driveLogin">
-            <i class="bi bi-google"></i>
-            <span>Sign in</span>
-          </div>
-
-          <div class="actionBtn" id="driveBackup">
-            <i class="bi bi-cloud-upload"></i>
-            <span>Backup</span>
-          </div>
-
-          <div class="actionBtn" id="driveRestore">
-            <i class="bi bi-cloud-download"></i>
-            <span>Restore</span>
-          </div>
-
-          <div class="row" style="grid-column: 1/-1">
-            <span>Import file</span>
-            <input id="file" type="file" accept="application/json" />
-          </div>
-        </div>
-
-        <!-- DANGER ZONE -->
-        <div class="settingsGroupTitle dangerTitle">Danger Zone</div>
-
-        <div class="metricBox actionGrid">
-          <div class="actionBtn dangerAct" id="undo">
-            <i class="bi bi-arrow-counterclockwise"></i>
-            <span>Undo last log</span>
-          </div>
-
-          <div class="actionBtn dangerAct" id="clearToday">
-            <i class="bi bi-calendar-x"></i>
-            <span>Today</span>
-          </div>
-
-          <div class="actionBtn dangerAct" id="clearAll">
-            <i class="bi bi-trash"></i>
-            <span>All</span>
+            <div class="actionBtn dangerAct" id="clearAll">
+              <i class="bi bi-trash"></i>
+              <span>All</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ===== TAB BAR ===== -->
-  <div class="tabs">
-    <div class="tab active" data-tab="timer">
-      <i class="bi bi-stopwatch"></i>Timer
-    </div>
-    <div class="tab" data-tab="today">
-      <i class="bi bi-calendar-check"></i>Today
-    </div>
-    <div class="tab" data-tab="progress">
-      <i class="bi bi-graph-up"></i>Progress
-    </div>
-    <div class="tab" data-tab="insights">
-      <i class="bi bi-lightbulb"></i>Insights
-    </div>
-    <div class="tab" data-tab="settings">
-      <i class="bi bi-gear"></i>Settings
-    </div>
-  </div>
-
-  <!-- TOAST -->
-  <div id="toast" class="toast"></div>
-
-  <!-- DISCLAIMER POPUP -->
-  <div id="discPopup" class="confirm-overlay">
-    <div class="confirm-card">
-      <div style="font-size: 0.9rem; text-align: left">
-        <b>Disclaimer</b><br /><br />
-        This app is a harm-reduction tool meant to help you cut down and
-        eventually quit. It does <b>not</b> encourage smoking during cooldown
-        — the goal is to increase the gap, build control, and smoke less.<br /><br />
-        This is not medical advice. Use at your own risk.
+    <!-- ===== TAB BAR ===== -->
+    <div class="tabs">
+      <div class="tab active" data-tab="timer">
+        <i class="bi bi-stopwatch"></i>Timer
       </div>
-
-      <button id="discOk" class="confirm-no" style="margin-top: 12px">
-        Close
-      </button>
-    </div>
-  </div>
-
-  <!-- MINI PICKER -->
-  <div id="pickerWrap" class="confirm-overlay">
-    <div class="confirm-card">
-      <div id="pickerTitle" style="margin-bottom: 8px; font-size: 0.9rem"></div>
-
-      <div id="pickerOptions" class="actionGrid"></div>
-
-      <button id="pickerClose" class="confirm-no" style="margin-top: 10px">
-        Cancel
-      </button>
-    </div>
-  </div>
-
-  <!-- URGE POPUP -->
-  <div id="urgePopup" class="urge-overlay">
-    <div class="urge-card">
-      <div style="font-size: 0.95rem; margin-bottom: 6px">
-        How strong was the urge?
+      <div class="tab" data-tab="today">
+        <i class="bi bi-calendar-check"></i>Today
       </div>
-
-      <div class="urge-grid" id="pUrges">
-        <div class="urge-btn" data-v="1"><span>🙂</span>Mild</div>
-        <div class="urge-btn" data-v="2"><span>😐</span>Okay</div>
-        <div class="urge-btn" data-v="3"><span>😣</span>Strong</div>
-        <div class="urge-btn" data-v="4"><span>🥵</span>Hard</div>
-        <div class="urge-btn" data-v="5"><span>🔥</span>Very hard</div>
+      <div class="tab" data-tab="progress">
+        <i class="bi bi-graph-up"></i>Progress
       </div>
-
-      <div class="sub" style="margin-top: 6px">What caused it?</div>
-
-      <div class="reason-grid" id="pReasons">
-        <div class="reason" data-r="Coffee">☕ Coffee</div>
-        <div class="reason" data-r="Stress">😤 Stress</div>
-        <div class="reason" data-r="Bored">😴 Bored</div>
-        <div class="reason" data-r="Social">🍻 Social</div>
-        <div class="reason" data-r="After food">🍽️ After food</div>
-        <div class="reason" data-r="Driving">🚗 Driving</div>
+      <div class="tab" data-tab="insights">
+        <i class="bi bi-lightbulb"></i>Insights
       </div>
-
-      <button id="pSave" class="btn primary" style="margin-top: 10px">
-        Save
-      </button>
-      <button id="pSkip" class="btn" style="margin-top: 6px">Skip</button>
+      <div class="tab" data-tab="settings">
+        <i class="bi bi-gear"></i>Settings
+      </div>
     </div>
-  </div>
 
-  <!-- CONFIRM -->
-  <div id="confirmWrap" class="confirm-overlay">
-    <div class="confirm-card">
-      <div id="confirmMsg" style="margin-bottom: 14px; font-size: 0.95rem; opacity: 0.9"></div>
-      <button id="confirmYes" class="confirm-yes">Yes</button>
-      <button id="confirmNo" class="confirm-no">Cancel</button>
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <!-- DISCLAIMER POPUP -->
+    <div id="discPopup" class="confirm-overlay">
+      <div class="confirm-card">
+        <div style="font-size: 0.9rem; text-align: left">
+          <b>Disclaimer</b><br /><br />
+          This app is a harm-reduction tool meant to help you cut down and
+          eventually quit. It does <b>not</b> encourage smoking during cooldown
+          — the goal is to increase the gap, build control, and smoke less.<br /><br />
+          This is not medical advice. Use at your own risk.
+        </div>
+
+        <button id="discOk" class="confirm-no" style="margin-top: 12px">
+          Close
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- LOADER -->
-  <div id="loader" class="loader" style="display: none">
-    <div class="spinner"></div>
-    <div class="sub" style="margin-top: 6px">Please wait…</div>
-  </div>
+    <!-- MINI PICKER -->
+    <div id="pickerWrap" class="confirm-overlay">
+      <div class="confirm-card">
+        <div
+          id="pickerTitle"
+          style="margin-bottom: 8px; font-size: 0.9rem"
+        ></div>
 
-  <audio id="ding">
-    <source src="data:audio/mp3;base64,//uQxA..." type="audio/mp3" />
-  </audio>
+        <div id="pickerOptions" class="actionGrid"></div>
 
-  <script>
-    const limitLabel = document.getElementById("limitLabel");
+        <button id="pickerClose" class="confirm-no" style="margin-top: 10px">
+          Cancel
+        </button>
+      </div>
+    </div>
 
-    function updateLimitLabel() {
-      limitLabel.textContent = `${limit.value} / day`;
-    }
+    <!-- URGE POPUP -->
+    <div id="urgePopup" class="urge-overlay">
+      <div class="urge-card">
+        <div style="font-size: 0.95rem; margin-bottom: 6px">
+          How strong was the urge?
+        </div>
 
-    limit.addEventListener("input", updateLimitLabel);
-    updateLimitLabel();
-  </script>
+        <div class="urge-grid" id="pUrges">
+          <div class="urge-btn" data-v="1"><span>🙂</span>Mild</div>
+          <div class="urge-btn" data-v="2"><span>😐</span>Okay</div>
+          <div class="urge-btn" data-v="3"><span>😣</span>Strong</div>
+          <div class="urge-btn" data-v="4"><span>🥵</span>Hard</div>
+          <div class="urge-btn" data-v="5"><span>🔥</span>Very hard</div>
+        </div>
 
-  <script>
-    const pickerWrap = document.getElementById("pickerWrap");
-    const pickerTitle = document.getElementById("pickerTitle");
-    const pickerOptions = document.getElementById("pickerOptions");
+        <div class="sub" style="margin-top: 6px">What caused it?</div>
 
-    function openPicker(title, options, current, onSelect) {
-      pickerTitle.textContent = title;
-      pickerOptions.innerHTML = "";
+        <div class="reason-grid" id="pReasons">
+          <div class="reason" data-r="Coffee">☕ Coffee</div>
+          <div class="reason" data-r="Stress">😤 Stress</div>
+          <div class="reason" data-r="Bored">😴 Bored</div>
+          <div class="reason" data-r="Social">🍻 Social</div>
+          <div class="reason" data-r="After food">🍽️ After food</div>
+          <div class="reason" data-r="Driving">🚗 Driving</div>
+        </div>
 
-      options.forEach((v) => {
-        const d = document.createElement("div");
-        d.className = "actionBtn";
-        if (v.value === current) d.classList.add("active");
-        d.innerHTML = `<i class="${v.icon}"></i><span>${v.label}</span>`;
-        d.onclick = () => {
-          onSelect(v.value);
-          pickerWrap.style.display = "none";
-        };
-        pickerOptions.appendChild(d);
+        <button id="pSave" class="btn primary" style="margin-top: 10px">
+          Save
+        </button>
+        <button id="pSkip" class="btn" style="margin-top: 6px">Skip</button>
+      </div>
+    </div>
+
+    <!-- CONFIRM -->
+    <div id="confirmWrap" class="confirm-overlay">
+      <div class="confirm-card">
+        <div
+          id="confirmMsg"
+          style="margin-bottom: 14px; font-size: 0.95rem; opacity: 0.9"
+        ></div>
+        <button id="confirmYes" class="confirm-yes">Yes</button>
+        <button id="confirmNo" class="confirm-no">Cancel</button>
+      </div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="loader" class="loader" style="display: none">
+      <div class="spinner"></div>
+      <div class="sub" style="margin-top: 6px">Please wait…</div>
+    </div>
+
+    <audio id="ding">
+      <source src="data:audio/mp3;base64,//uQxA..." type="audio/mp3" />
+    </audio>
+
+    <script>
+      const limitLabel = document.getElementById("limitLabel");
+
+      function updateLimitLabel() {
+        limitLabel.textContent = `${limit.value} / day`;
+      }
+
+      limit.addEventListener("input", updateLimitLabel);
+      updateLimitLabel();
+    </script>
+
+    <script>
+      const pickerWrap = document.getElementById("pickerWrap");
+      const pickerTitle = document.getElementById("pickerTitle");
+      const pickerOptions = document.getElementById("pickerOptions");
+
+      function openPicker(title, options, current, onSelect) {
+        pickerTitle.textContent = title;
+        pickerOptions.innerHTML = "";
+
+        options.forEach((v) => {
+          const d = document.createElement("div");
+          d.className = "actionBtn";
+          if (v.value === current) d.classList.add("active");
+          d.innerHTML = `<i class="${v.icon}"></i><span>${v.label}</span>`;
+          d.onclick = () => {
+            onSelect(v.value);
+            pickerWrap.style.display = "none";
+          };
+          pickerOptions.appendChild(d);
+        });
+
+        pickerWrap.style.display = "flex";
+      }
+
+      pickerClose.onclick = () => (pickerWrap.style.display = "none");
+
+      // SOUND
+      soundBtn.onclick = () => {
+        openPicker(
+          "Select sound",
+          [
+            { value: "ding", icon: "bi bi-music-note", label: "Ding" },
+            { value: "soft", icon: "bi bi-soundwave", label: "Soft" },
+            { value: "off", icon: "bi bi-volume-mute", label: "Off" },
+          ],
+          soundSel.value,
+          (v) => (soundSel.value = v)
+        );
+      };
+
+      // CURRENCY
+      currencyBtn.onclick = () => {
+        openPicker(
+          "Choose currency",
+          [
+            { value: "₹", icon: "bi bi-currency-rupee", label: "Rupee" },
+            { value: "$", icon: "bi bi-currency-dollar", label: "Dollar" },
+            { value: "€", icon: "bi bi-currency-euro", label: "Euro" },
+          ],
+          currency.value,
+          (v) => (currency.value = v)
+        );
+      };
+    </script>
+
+    <script>
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab")
+            .forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+
+          document
+            .querySelectorAll(".page")
+            .forEach((p) => p.classList.remove("active"));
+          document
+            .getElementById("tab-" + tab.dataset.tab)
+            .classList.add("active");
+        });
       });
+    </script>
 
-      pickerWrap.style.display = "flex";
-    }
+    <script>
+      // UI wrappers
+      nightToggle.onclick = () => manualNight.click();
 
-    pickerClose.onclick = () => (pickerWrap.style.display = "none");
+      silent.onclick = () => silent.classList.toggle("active");
+      reminder.onclick = () => reminder.classList.toggle("active");
+    </script>
 
-    // SOUND
-    soundBtn.onclick = () => {
-      openPicker(
-        "Select sound",
-        [
-          { value: "ding", icon: "bi bi-music-note", label: "Ding" },
-          { value: "soft", icon: "bi bi-soundwave", label: "Soft" },
-          { value: "off", icon: "bi bi-volume-mute", label: "Off" },
-        ],
-        soundSel.value,
-        (v) => (soundSel.value = v)
-      );
-    };
+    <script>
+      // disclaimer popup
+      const discPopup = document.getElementById("discPopup");
+      document.getElementById("openDisclaimer").onclick = () =>
+        (discPopup.style.display = "flex");
+      document.getElementById("discOk").onclick = () =>
+        (discPopup.style.display = "none");
+    </script>
 
-    // CURRENCY
-    currencyBtn.onclick = () => {
-      openPicker(
-        "Choose currency",
-        [
-          { value: "₹", icon: "bi bi-currency-rupee", label: "Rupee" },
-          { value: "$", icon: "bi bi-currency-dollar", label: "Dollar" },
-          { value: "€", icon: "bi bi-currency-euro", label: "Euro" },
-        ],
-        currency.value,
-        (v) => (currency.value = v)
-      );
-    };
-  </script>
-
-  <script>
-    document.querySelectorAll(".tab").forEach((tab) => {
-      tab.addEventListener("click", () => {
-        document
-          .querySelectorAll(".tab")
-          .forEach((t) => t.classList.remove("active"));
-        tab.classList.add("active");
-
-        document
-          .querySelectorAll(".page")
-          .forEach((p) => p.classList.remove("active"));
-        document
-          .getElementById("tab-" + tab.dataset.tab)
-          .classList.add("active");
-      });
-    });
-  </script>
-
-  <script>
-    // UI wrappers
-    nightToggle.onclick = () => manualNight.click();
-
-    silent.onclick = () => silent.classList.toggle("active");
-    reminder.onclick = () => reminder.classList.toggle("active");
-  </script>
-
-  <script>
-    // disclaimer popup
-    const discPopup = document.getElementById("discPopup");
-    document.getElementById("openDisclaimer").onclick = () =>
-      (discPopup.style.display = "flex");
-    document.getElementById("discOk").onclick = () =>
-      (discPopup.style.display = "none");
-  </script>
-
-  <script src="app.js"></script>
-  <script src="drive.js"></script>
-</body>
-
+    <script src="app.js"></script>
+    <script src="drive.js"></script>
+  </body>
 </html>

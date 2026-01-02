@@ -1,0 +1,55 @@
+:root {
+  --bg: #0f0f0f;
+  --panel: #151515;
+  --accent: #4ade80;
+  --border: rgba(255, 255, 255, 0.14);
+  --text: #fff;
+}
+
+body.night {
+  --bg: #060606;
+  --panel: #0d0d0d;
+  --text: #f5f5f5;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 1.22rem;
+}
+
+.sub {
+  opacity: 0.75;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+
+.info {
+  font-size: 0.8rem;
+  min-height: 16px;
+}
+
+/* top ribbon used on some screens */
+#sinceTop {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+/* global disclaimer */
+.miniDisclaimer {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  opacity: 0.75;
+  text-align: center;
+}
+.miniDisclaimer span {
+  color: #4ade80;
+  cursor: pointer;
+  margin-left: 4px;
+}

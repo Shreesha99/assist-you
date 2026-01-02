@@ -173,8 +173,9 @@ function buildAchievements() {
           <div style="opacity:.8">${Math.min(s, g.d)} / ${g.d}</div>
         </div>
         <div style="width:100%;height:8px;border-radius:10px;background:#1f1f1f;margin-top:6px;overflow:hidden;">
-          <div style="width:${pct}%;height:100%;background:${done ? "#4ade80" : "#38bdf8"
-      };transition:.3s;"></div>
+          <div style="width:${pct}%;height:100%;background:${
+      done ? "#4ade80" : "#38bdf8"
+    };transition:.3s;"></div>
         </div>
       </div>`;
   });
@@ -357,20 +358,21 @@ function enhanceProgress() {
 
   wrap.innerHTML = `
     <div class="funCard">📊 Weekly average — <span>${avg} cig/day</span></div>
-    <div class="funCard">🏅 Best day — <span>${best.label}: ${best.value
-    } cig</span></div>
+    <div class="funCard">🏅 Best day — <span>${best.label}: ${
+    best.value
+  } cig</span></div>
 
     <div class="funCard" style="flex-direction:column;align-items:flex-start">
       <div style="opacity:.8;margin-bottom:4px;font-size:.78rem">Last 7 days</div>
       ${days
-      .map(
-        (d) =>
-          `<div style="display:flex;justify-content:space-between;width:100%;font-size:.8rem">
+        .map(
+          (d) =>
+            `<div style="display:flex;justify-content:space-between;width:100%;font-size:.8rem">
               <span>${d.label}</span>
               <span>${d.value}</span>
             </div>`
-      )
-      .join("")}
+        )
+        .join("")}
     </div>
   `;
 
@@ -523,12 +525,13 @@ function buildInsights() {
 
   let reasonHtml = sorted.length
     ? sorted
-      .map(
-        (r) =>
-          `<div class="funCard">${icons[r[0]] || "🔎"} ${r[0]} — <span>${r[1]
-          } urges</span></div>`
-      )
-      .join("")
+        .map(
+          (r) =>
+            `<div class="funCard">${icons[r[0]] || "🔎"} ${r[0]} — <span>${
+              r[1]
+            } urges</span></div>`
+        )
+        .join("")
     : `<div class="funCard">🔎 <span>Log urges to see patterns</span></div>`;
 
   insightsBox.innerHTML += reasonHtml;
@@ -571,8 +574,8 @@ function enhanceInsights() {
     weekend < weekday
       ? "You smoke less on weekends 🎉"
       : weekend > weekday
-        ? "Weekends seem riskier — plan distractions 📅"
-        : "Pretty balanced across the week";
+      ? "Weekends seem riskier — plan distractions 📅"
+      : "Pretty balanced across the week";
 
   // --- 2) Skip success rate ---
   const totalLogs = h.length;
@@ -645,7 +648,7 @@ function notify() {
     if (soundSel.value !== "off") {
       try {
         ding.play();
-      } catch { }
+      } catch {}
     }
   }
   if ("Notification" in window && Notification.permission === "granted")
@@ -1123,8 +1126,8 @@ function enhanceTimer() {
 
   const avg = gaps.length
     ? Math.round(
-      gaps.reduce((a, b) => a + b, 0) / gaps.length + 5 /* tiny push */
-    )
+        gaps.reduce((a, b) => a + b, 0) / gaps.length + 5 /* tiny push */
+      )
     : minutes;
 
   // motivational tip
@@ -1160,7 +1163,6 @@ function enhanceTimer() {
 
   <div class="funCard">💡 Tip — <span>${tip}</span></div>
 `;
-
 }
 
 document.addEventListener("click", (e) => {
@@ -1194,8 +1196,6 @@ document.addEventListener("click", (e) => {
   minutes = mins;
   renderPresets();
 });
-
-
 
 function coolingMessage(remMs) {
   const mins = Math.ceil(remMs / 60000);
