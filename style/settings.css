@@ -92,3 +92,112 @@ select {
 .dangerAct span {
   color: #f87171;
 }
+
+/* ================= SETTINGS TAB POLISH ================= */
+
+#tab-settings .card {
+  background: linear-gradient(180deg, #141414, #0d0d0d);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 18px 16px 22px;
+}
+
+#tab-settings .card > * + * {
+  margin-top: 14px;
+}
+
+/* Section label rhythm */
+#tab-settings .settingsGroupTitle {
+  margin: 18px 0 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+}
+
+/* Group container look */
+#tab-settings .metricBox {
+  padding: 12px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: #0e0e0e;
+}
+
+/* Row alignment */
+#tab-settings .row {
+  margin: 8px 0;
+  font-size: 0.84rem;
+}
+
+/* Inline inputs */
+#tab-settings input[type="number"],
+#tab-settings select {
+  background: #0b0b0b;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 6px 8px;
+}
+
+/* Icon grid buttons */
+#tab-settings .actionGrid {
+  margin-top: 6px;
+}
+
+#tab-settings .actionBtn {
+  background: #0d0d0d;
+  border-radius: 14px;
+  border: 1px solid #242424;
+}
+
+#tab-settings .actionBtn.active {
+  background: #112214;
+  border-color: #2f4f2f;
+}
+
+#tab-settings .actionBtn span {
+  font-size: 0.72rem;
+}
+
+/* Reminders — slightly special feeling */
+#tab-settings .actionBtn#reminder.active {
+  border-color: #3b82f6;
+  background: #0b1e39;
+}
+
+/* Stepper inputs (daily limit) */
+#tab-settings #limitStepper button {
+  background: #1a1a1a;
+  border: 1px solid #2b2b2b;
+  border-radius: 10px;
+}
+
+#tab-settings #limitDisplay {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* Hidden selects still feel part of layout */
+#tab-settings #soundSel,
+#tab-settings #currency {
+  margin-top: 6px;
+}
+
+/* Danger zone */
+#tab-settings .dangerTitle {
+  color: #f87171;
+}
+
+#tab-settings .dangerAct {
+  background: #190b0b;
+  border-color: #442020;
+}
+
+#tab-settings .dangerAct:hover {
+  background: #221010;
+}
+
+/* File upload row consistency */
+#tab-settings input[type="file"] {
+  font-size: 0.75rem;
+  color: #aaa;
+}

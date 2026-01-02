@@ -56,3 +56,229 @@
   gap: 6px;
   margin-top: 6px;
 }
+
+/* ================= TODAY TAB POLISH ================= */
+
+#tab-today .card {
+  background: linear-gradient(180deg, #141414, #0d0d0d);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 18px 14px 20px;
+}
+
+#tab-today .card > * + * {
+  margin-top: 14px;
+}
+
+/* Title consistency */
+#tab-today .sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0.95;
+  margin-bottom: 4px;
+}
+
+/* Metrics box — more breathing room */
+#tab-today .metricBox {
+  padding: 10px 12px;
+  background: #0f0f0f;
+  border-radius: 16px;
+}
+
+/* Top "Cigarettes" row */
+#tab-today .metric {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Limit progress area */
+#tab-today .barWrap {
+  margin-top: 8px;
+  height: 10px;
+}
+
+#tab-today #limitBadge {
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* Fun stat cards (money, life, steps…) */
+#tab-today .funCard {
+  padding: 9px 10px;
+  margin-top: 8px;
+  border-radius: 14px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+}
+
+#tab-today .funCard span {
+  font-size: 0.82rem;
+  opacity: 0.9;
+}
+
+/* Longest cooldown card */
+#tab-today .funCard:last-child {
+  margin-top: 12px;
+}
+
+/* Gentle separators between logical groups */
+#tab-today .metricBox + .funCard {
+  margin-top: 18px;
+}
+
+/* Small caption alignment */
+#tab-today .sub {
+  text-align: center;
+  margin-top: 6px;
+}
+
+/* ================= PROGRESS TAB POLISH ================= */
+
+#tab-progress .card {
+  background: linear-gradient(180deg, #141414, #0d0d0d);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 18px 14px 20px;
+}
+
+#tab-progress .card > * + * {
+  margin-top: 14px;
+}
+
+/* Title */
+#tab-progress .sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0.95;
+  margin-bottom: 2px;
+}
+
+/* Container for metrics */
+#tab-progress .metricBox {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: #0f0f0f;
+}
+
+/* Streak row */
+#tab-progress .metric {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Chart wrapper */
+#tab-progress .canvasWrap {
+  border-radius: 14px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  padding: 10px 10px 14px;
+  margin-top: 10px;
+}
+
+/* Chart caption */
+#tab-progress .canvasWrap .sub {
+  margin-top: 6px;
+  text-align: center;
+  opacity: 0.75;
+}
+
+/* Recent log text */
+#tab-progress #recent {
+  margin-top: 10px;
+  text-align: center;
+  opacity: 0.8;
+  font-size: 0.78rem;
+}
+
+/* Extra stats cards (the ones we injected) */
+#tab-progress .funCard {
+  padding: 9px 10px;
+  margin-top: 8px;
+  border-radius: 14px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+}
+
+#tab-progress .funCard span {
+  font-size: 0.82rem;
+  opacity: 0.92;
+}
+
+/* Visual separation between groups */
+#tab-progress .progress-extra,
+#tab-progress .progress-extra-2 {
+  margin-top: 14px;
+}
+
+#tab-progress .progress-extra .funCard:first-child,
+#tab-progress .progress-extra-2 .funCard:first-child {
+  margin-top: 6px;
+}
+
+/* ================= INSIGHTS TAB POLISH ================= */
+
+#tab-insights .card {
+  background: linear-gradient(180deg, #141414, #0d0d0d);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 18px 14px 20px;
+}
+
+#tab-insights .card > * + * {
+  margin-top: 14px;
+}
+
+/* Section headers */
+#tab-insights .sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0.95;
+  margin-bottom: 2px;
+}
+
+/* Insight + achievement containers */
+#tab-insights .metricBox {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: #0f0f0f;
+  border: 1px solid #1f1f1f;
+}
+
+/* Individual insight tiles */
+#tab-insights .funCard {
+  margin-top: 8px;
+  padding: 9px 10px;
+  border-radius: 14px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#tab-insights .funCard span {
+  font-size: 0.82rem;
+  opacity: 0.92;
+}
+
+/* Extra analytics block spacing */
+#tab-insights .insights-extra {
+  margin-top: 12px;
+}
+
+/* Make achievements read clearly like milestones */
+#tab-insights #achievements .funCard {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#tab-insights #achievements .funCard > div:first-child {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+}
+
+#tab-insights #achievements .funCard .bar {
+  margin-top: 6px;
+}
