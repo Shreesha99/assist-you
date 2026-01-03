@@ -54,6 +54,36 @@ const history = () => jget("history", []);
 const urgeLog = () => jget("urgeLog", []);
 const skipLog = () => jget("skips", []);
 
+let audioPrimed = false;
+
+const soundCache = {
+  ding: new Audio("sounds/ding.mp3"),
+  soft: new Audio("sounds/soft.mp3"),
+};
+
+Object.values(soundCache).forEach((a) => {
+  a.preload = "auto";
+  a.volume = 1;
+});
+
+function primeAudio() {
+  if (audioPrimed) return;
+  audioPrimed = true;
+
+  Object.values(soundCache).forEach((a) => {
+    try {
+      a.volume = 0.01;
+      a.play()
+        .then(() => {
+          a.pause();
+          a.currentTime = 0;
+          a.volume = 1;
+        })
+        .catch(() => {});
+    } catch {}
+  });
+}
+
 function formatMinutes(m) {
   m = Math.round(m);
   if (m < 60) return `${m}m`;
@@ -289,7 +319,6 @@ function sinceText() {
   txt += `${m}m ${s}s ago`;
   since.textContent = txt;
 }
-setInterval(sinceText, 1000);
 
 // mini chart
 function draw() {
@@ -641,16 +670,18 @@ buildInsights = function () {
   enhanceInsights();
 };
 
-// notifications
 function notify() {
-  if (!silent.checked) {
-    if ("vibrate" in navigator) navigator.vibrate(300);
-    if (soundSel.value !== "off") {
-      try {
-        ding.play();
-      } catch {}
-    }
+  if (!silent.checked && soundSel.value !== "off") {
+    const snd = soundSel.value === "soft" ? soundCache.soft : soundCache.ding;
+
+    try {
+      snd.currentTime = 0; // instant
+      snd.play();
+    } catch {}
   }
+
+  if ("vibrate" in navigator) navigator.vibrate(300);
+
   if ("Notification" in window && Notification.permission === "granted")
     new Notification("Cooldown done", { body: "You can smoke now" });
 
@@ -660,6 +691,7 @@ function notify() {
 
 // timer engine
 function tick(end, total) {
+  sinceText();
   const rem = end - Date.now();
   if (rem <= 0) {
     clearInterval(interval);
@@ -690,18 +722,19 @@ function tick(end, total) {
   enhanceTimer();
 }
 
-// START button
 start.onclick = async () => {
-  const ok = await niceConfirm("Log a cigarette and start cooldown?");
-  if (!ok) return false;
+  primeAudio();
 
-  const lim = parseInt(limit.value || 8),
-    d = daily(),
-    k = new Date().toDateString();
+  const ok = await niceConfirm("Log a cigarette and start cooldown?");
+  if (!ok) return;
+
+  const lim = parseInt(limit.value || 8);
+  const d = daily();
+  const k = new Date().toDateString();
   if ((d[k] || 0) >= lim) show("Limit reached today");
 
-  const dur = minutes * 6e4,
-    end = Date.now() + dur;
+  const dur = minutes * 60000;
+  const end = Date.now() + dur;
 
   localStorage.setItem("until", end);
   localStorage.setItem("last", Date.now());
@@ -720,7 +753,7 @@ start.onclick = async () => {
   interval = setInterval(() => tick(end, dur), 1000);
   tick(end, dur);
 
-  return true;
+  await askUrgePopup();
 };
 
 // pause/resume
@@ -1119,13 +1152,6 @@ function niceConfirm(message) {
     confirmNo.onclick = () => close(false);
   });
 }
-
-// patch start to show urge popup
-const _origStart = start.onclick;
-start.onclick = async (...args) => {
-  const didLog = await _origStart.apply(start, args);
-  if (didLog) await askUrgePopup();
-};
 
 /* ---- TIMER TAB ENHANCEMENTS ---- */
 
