@@ -56,9 +56,11 @@ const skipLog = () => jget("skips", []);
 
 let audioPrimed = false;
 
+const APP_BASE = "/assist-you";
+
 const soundCache = {
-  ding: new Audio("sounds/ding.mp3"),
-  soft: new Audio("sounds/soft.mp3"),
+  ding: new Audio(`${APP_BASE}/sounds/ding.mp3`),
+  soft: new Audio(`${APP_BASE}/sounds/soft.mp3`),
 };
 
 Object.values(soundCache).forEach((a) => {
@@ -83,6 +85,14 @@ function primeAudio() {
     } catch {}
   });
 }
+
+document.addEventListener(
+  "pointerdown",
+  () => {
+    primeAudio();
+  },
+  { once: true }
+);
 
 function formatMinutes(m) {
   m = Math.round(m);
@@ -749,12 +759,24 @@ start.onclick = async () => {
   start.style.display = "none";
   pause.style.display = "block";
   paused = false;
-
-  interval = setInterval(() => tick(end, dur), 1000);
-  tick(end, dur);
+  startTimer(end, dur);
 
   await askUrgePopup();
 };
+
+function startTimer(end, total) {
+  function loop() {
+    tick(end, total);
+
+    const remaining = end - Date.now();
+    if (remaining <= 0) return;
+
+    const next = remaining % 1000 || 1000;
+    interval = setTimeout(loop, next);
+  }
+
+  loop();
+}
 
 // pause/resume
 pause.onclick = () => {
@@ -772,14 +794,13 @@ pause.onclick = () => {
       end = Date.now() + left;
     localStorage.removeItem("remain");
     localStorage.setItem("until", end);
-    interval = setInterval(() => tick(end, total), 1000);
-    tick(end, total);
+    startTimer(end, total);
   }
 };
 
 // reset
 reset.onclick = () => {
-  clearInterval(interval);
+  clearTimeout(interval);
   localStorage.removeItem("until");
   localStorage.removeItem("remain");
   localStorage.removeItem("total");
