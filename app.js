@@ -1324,7 +1324,8 @@ function getCurrencySymbol(v) {
     interval = setInterval(() => tick(until, total), 1000);
   }
 
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+  if ("serviceWorker" in navigator)
+    navigator.serviceWorker.register("/assist-you/sw.js");
 
   if ("Notification" in window && Notification.permission === "default")
     Notification.requestPermission();
