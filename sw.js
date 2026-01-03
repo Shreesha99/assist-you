@@ -1,17 +1,17 @@
-const CACHE_NAME = "assist-you-v5";
+const CACHE_NAME = "assist-you-v6";
 
 /**
  * Files that MUST be available offline
  * (keep paths absolute and correct)
  */
- const URLS_TO_CACHE = [
-  "/assist-you/",
-  "/assist-you/index.html",
-  "/assist-you/manifest.json",
-  "/assist-you/icon-192.png",
-  "/assist-you/icon-512.png",
-  "/assist-you/sounds/ding.mp3",
-  "/assist-you/sounds/soft.mp3",
+const URLS_TO_CACHE = [
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./sounds/ding.mp3",
+  "./sounds/soft.mp3",
 ];
 
 /* ===========================
@@ -37,13 +37,15 @@ self.addEventListener("activate", (event) => {
       self.clients.claim(),
 
       // 🧹 clean old caches
-      caches.keys().then((keys) =>
-        Promise.all(
-          keys
-            .filter((key) => key !== CACHE_NAME)
-            .map((key) => caches.delete(key))
-        )
-      ),
+      caches
+        .keys()
+        .then((keys) =>
+          Promise.all(
+            keys
+              .filter((key) => key !== CACHE_NAME)
+              .map((key) => caches.delete(key))
+          )
+        ),
     ])
   );
 });

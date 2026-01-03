@@ -54,45 +54,44 @@ const history = () => jget("history", []);
 const urgeLog = () => jget("urgeLog", []);
 const skipLog = () => jget("skips", []);
 
-let audioPrimed = false;
+const APP_BASE = new URL(".", window.location.href).pathname.replace(/\/$/, "");
 
-const APP_BASE = "/assist-you";
+let audioCtx = null;
+let audioBuffers = {};
 
-const soundCache = {
-  ding: new Audio(`${APP_BASE}/sounds/ding.mp3`),
-  soft: new Audio(`${APP_BASE}/sounds/soft.mp3`),
-};
-
-Object.values(soundCache).forEach((a) => {
-  a.preload = "auto";
-  a.volume = 1;
-});
-
-function primeAudio() {
-  if (audioPrimed) return;
-  audioPrimed = true;
-
-  Object.values(soundCache).forEach((a) => {
-    try {
-      a.volume = 0.01;
-      a.play()
-        .then(() => {
-          a.pause();
-          a.currentTime = 0;
-          a.volume = 1;
-        })
-        .catch(() => {});
-    } catch {}
-  });
+async function loadSound(name, url) {
+  const res = await fetch(url);
+  const buf = await res.arrayBuffer();
+  audioBuffers[name] = await audioCtx.decodeAudioData(buf);
 }
 
 document.addEventListener(
   "pointerdown",
-  () => {
-    primeAudio();
+  async () => {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      await Promise.all([
+        loadSound("ding", `${APP_BASE}/sounds/ding.mp3`),
+        loadSound("soft", `${APP_BASE}/sounds/soft.mp3`),
+      ]);
+    }
+
+    if (audioCtx.state === "suspended") {
+      await audioCtx.resume();
+    }
   },
   { once: true }
 );
+
+function playSound(name) {
+  if (!audioCtx || !audioBuffers[name]) return;
+
+  const src = audioCtx.createBufferSource();
+  src.buffer = audioBuffers[name];
+  src.connect(audioCtx.destination);
+  src.start(0);
+}
 
 function formatMinutes(m) {
   m = Math.round(m);
@@ -682,12 +681,7 @@ buildInsights = function () {
 
 function notify() {
   if (!silent.checked && soundSel.value !== "off") {
-    const snd = soundSel.value === "soft" ? soundCache.soft : soundCache.ding;
-
-    try {
-      snd.currentTime = 0; // instant
-      snd.play();
-    } catch {}
+    playSound(soundSel.value === "soft" ? "soft" : "ding");
   }
 
   if ("vibrate" in navigator) navigator.vibrate(300);
@@ -704,7 +698,7 @@ function tick(end, total) {
   sinceText();
   const rem = end - Date.now();
   if (rem <= 0) {
-    clearInterval(interval);
+    clearTimeout(interval);
     localStorage.removeItem("until");
     localStorage.removeItem("total");
     ring.style.strokeDashoffset = 0;
@@ -733,8 +727,6 @@ function tick(end, total) {
 }
 
 start.onclick = async () => {
-  primeAudio();
-
   const ok = await niceConfirm("Log a cigarette and start cooldown?");
   if (!ok) return;
 
@@ -782,7 +774,7 @@ function startTimer(end, total) {
 pause.onclick = () => {
   if (!paused) {
     paused = true;
-    clearInterval(interval);
+    clearTimeout(interval);
     localStorage.setItem("remain", left);
     localStorage.removeItem("until");
     pause.textContent = "Resume";
@@ -1324,8 +1316,13 @@ function getCurrencySymbol(v) {
     interval = setInterval(() => tick(until, total), 1000);
   }
 
-  if ("serviceWorker" in navigator)
-    navigator.serviceWorker.register("/assist-you/sw.js");
+  if (
+    "serviceWorker" in navigator &&
+    location.hostname !== "127.0.0.1" &&
+    location.hostname !== "localhost"
+  ) {
+    navigator.serviceWorker.register(`${APP_BASE}/sw.js`);
+  }
 
   if ("Notification" in window && Notification.permission === "default")
     Notification.requestPermission();

@@ -1,22 +1,10 @@
 {
   "name": "Assist you",
   "short_name": "Assist you",
-  "start_url": "/assist-you/",
-  "scope": "/assist-you/",
+  "start_url": ".",
+  "scope": ".",
   "display": "standalone",
   "background_color": "#0f0f0f",
   "theme_color": "#0f0f0f",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "/assist-you/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/assist-you/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "orientation": "portrait"
 }
