@@ -4,12 +4,14 @@ const CACHE_NAME = "assist-you-v3";
  * Files that MUST be available offline
  * (keep paths absolute and correct)
  */
-const URLS_TO_CACHE = [
+ const URLS_TO_CACHE = [
   "/assist-you/",
   "/assist-you/index.html",
   "/assist-you/manifest.json",
   "/assist-you/icon-192.png",
   "/assist-you/icon-512.png",
+  "/assist-you/sounds/ding.mp3",
+  "/assist-you/sounds/soft.mp3",
 ];
 
 /* ===========================
