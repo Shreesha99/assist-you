@@ -1,11 +1,11 @@
 const CACHE_NAME = "smoke-timer-v2";
 
 const URLS_TO_CACHE = [
-  "/Test/",
-  "/Test/index.html",
-  "/Test/manifest.json",
-  "/Test/icon-192.png",
-  "/Test/icon-512.png"
+  "/assist-you/",
+  "/assist-you/index.html",
+  "/assist-you/manifest.json",
+  "/assist-you/icon-192.png",
+  "/assist-you/icon-512.png"
 ];
 
 self.addEventListener("install", event => {

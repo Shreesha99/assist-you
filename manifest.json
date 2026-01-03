@@ -1,8 +1,8 @@
 {
   "name": "Assist you",
   "short_name": "Assist you",
-  "start_url": "/Test/",
-  "scope": "/Test/",
+  "start_url": "/assist-you/",
+  "scope": "/assist-you/",
   "display": "standalone",
   "background_color": "#0f0f0f",
   "theme_color": "#0f0f0f",
