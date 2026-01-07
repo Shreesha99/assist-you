@@ -105,9 +105,20 @@ function show(m) {
   toast.textContent = m;
   toast.classList.add("show");
 
+  gsap.fromTo(
+    toast,
+    { y: 10, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.35, ease: "power3.out" }
+  );
+
   setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2200);
+    gsap.to(toast, {
+      y: 10,
+      opacity: 0,
+      duration: 0.25,
+      onComplete: () => toast.classList.remove("show"),
+    });
+  }, 2000);
 }
 
 function sinceText() {
@@ -717,7 +728,12 @@ function tick(end, total) {
   time.textContent = `${m.toString().padStart(2, "0")}:${s
     .toString()
     .padStart(2, "0")}`;
-  ring.style.strokeDashoffset = CIRC * (1 - rem / total);
+  gsap.to(ring, {
+    strokeDashoffset: CIRC * (1 - rem / total),
+    duration: 0.35,
+    ease: "power2.out",
+  });
+
   if (!paused) ring.classList.add("cooling");
   else ring.classList.remove("cooling");
 
@@ -790,18 +806,80 @@ pause.onclick = () => {
   }
 };
 
-// reset
-reset.onclick = () => {
+function getResetMessage() {
+  const untilRaw = localStorage.getItem("until");
+  if (!untilRaw) return "Reset the timer?";
+
+  const until = parseInt(untilRaw);
+  const remaining = until - Date.now();
+
+  if (remaining <= 0) return "Reset the timer?";
+
+  const minsLeft = Math.ceil(remaining / 60000);
+  const streak = streakDays();
+
+  // VERY close
+  if (minsLeft <= 1) {
+    return "You’re almost there — one more minute builds discipline. Reset anyway?";
+  }
+
+  if (minsLeft <= 3) {
+    return "So close. Stretching the gap now really helps. Reset?";
+  }
+
+  // Mid cooldown encouragement
+  if (minsLeft <= 10) {
+    return "You’ve already waited a bit — want to push a little longer?";
+  }
+
+  // Streak-based nudge
+  if (streak >= 5) {
+    return "Your streak is strong. Resetting now breaks momentum — reset anyway?";
+  }
+
+  // Default fallback
+  return "Resetting now ends this cooldown. Are you sure?";
+}
+
+reset.onclick = async () => {
+  if (localStorage.getItem("until")) {
+    const ok = await niceConfirm(getResetMessage());
+
+    if (!ok) return;
+  }
+
   clearTimeout(interval);
   localStorage.removeItem("until");
   localStorage.removeItem("remain");
   localStorage.removeItem("total");
-  ring.style.strokeDashoffset = 0;
+
+  gsap.to(ring, {
+    strokeDashoffset: CIRC,
+    duration: 0.4,
+    ease: "power2.out",
+  });
+
   time.textContent = "00:00";
   start.style.display = "block";
   pause.style.display = "none";
   status.textContent = "";
+
+  show("Timer reset");
 };
+
+document.querySelectorAll(".tab").forEach((tab) => {
+  tab.addEventListener("pointerdown", () => {
+    gsap.to(tab, { scale: 0.92, duration: 0.08 });
+  });
+
+  tab.addEventListener("pointerup", () => {
+    gsap.to(tab, { scale: 1, duration: 0.15, ease: "power2.out" });
+  });
+
+  tab.addEventListener("pointerleave", () => {
+    gsap.to(tab, { scale: 1, duration: 0.15 });
+  });
+});
 
 // confetti
 function fireConfetti() {
@@ -1296,6 +1374,20 @@ function getCurrencySymbol(v) {
     }[v] || v
   );
 }
+
+document.querySelectorAll(".btn, .actionBtn, .pill").forEach((btn) => {
+  btn.addEventListener("pointerdown", () => {
+    gsap.to(btn, { scale: 0.96, duration: 0.08 });
+  });
+
+  btn.addEventListener("pointerup", () => {
+    gsap.to(btn, { scale: 1, duration: 0.12, ease: "power2.out" });
+  });
+
+  btn.addEventListener("pointerleave", () => {
+    gsap.to(btn, { scale: 1, duration: 0.12 });
+  });
+});
 
 // init
 (function init() {
