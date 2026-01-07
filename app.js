@@ -1142,7 +1142,7 @@ clearToday.onclick = async () => {
 // clear all
 clearAll.onclick = async () => {
   const ok = await niceConfirm(
-    "🗑️ Delete ALL data — cigarettes, urges, skips, streaks, everything?"
+    "🗑️ Delete all data — cigarettes, urges, skips, streaks, everything?"
   );
   if (!ok) return;
 

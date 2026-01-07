@@ -273,3 +273,7 @@ select {
 .backupGird > :not(:first-child) {
   display: none;
 }
+
+.reminders {
+  display: none;
+}
